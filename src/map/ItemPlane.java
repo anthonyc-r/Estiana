@@ -1,0 +1,34 @@
+package map;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import interfaces.Placeable;
+import interfaces.Item;
+
+/*
+ * The item plane hovers over the map using a reference to check item compatibility
+ */
+public class ItemPlane {
+	//Constructor
+	public ItemPlane(Map aMap){
+		itemMap = new HashMap<Placeable, ArrayList<Item>>();
+	}
+	
+	public ArrayList<Item> getItems(Placeable aSurface){
+		return itemMap.get(aSurface);
+	}
+	
+	public void placeItem(Placeable surface, Item item){
+		if(itemMap.containsKey(surface)){
+			itemMap.get(surface).add(item);
+		} else{
+			ArrayList<Item> newItems = new ArrayList();
+			newItems.add(item);
+			itemMap.put(surface, newItems);
+		}
+	}
+	
+
+	private HashMap<Placeable, ArrayList<Item>> itemMap;
+}
