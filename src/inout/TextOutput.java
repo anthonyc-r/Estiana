@@ -147,14 +147,17 @@ public class TextOutput implements Output<String> {
 		}
 	}
 	private String genAnimalDesc(Tile aTile){
-		ArrayList<Animal> animals = aTile.getAnimals();
+		ArrayList<Animal> animals = map.getAnimalPlane().getAnimals(aTile);
+		if(animals == null){
+			animals = new ArrayList<Animal>();
+		}
 		if(animals.size() == 0){
 			return "";
 		} else{
 			StringBuilder buff = new StringBuilder();
 			buff.append("Around you, you see ");
 			for(Animal animal : animals){
-				buff.append("a "+animal.getName()+", ");
+				buff.append("a "+animal.getType()+", ");
 			}
 			return buff.toString();
 		}

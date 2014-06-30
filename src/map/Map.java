@@ -92,6 +92,9 @@ public class Map {
 	public BuildingPlane getBuildingPlane(){
 		return this.buildingPlane;
 	}
+	public AnimalPlane getAnimalPlane(){
+		return this.animalPlane;
+	}
 	private ArrayList<ArrayList<Tile>> tileGrid = null;
 	
 	private String mapName;
@@ -100,6 +103,7 @@ public class Map {
 	
 	private ItemPlane itemPlane = new ItemPlane(this);
 	private BuildingPlane buildingPlane = new BuildingPlane(this);
+	private AnimalPlane animalPlane = new AnimalPlane(this);
 	
 	public static final int SEA_HEIGHT = 100;
 }

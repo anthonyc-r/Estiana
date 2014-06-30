@@ -16,6 +16,10 @@ public class ItemPlane {
 	}
 	
 	public ArrayList<Item> getItems(Placeable aSurface){
+		if(itemMap.get(aSurface) == null){
+			ArrayList<Item> newItemList = new ArrayList<Item>();
+			itemMap.put(aSurface, newItemList);
+		}
 		return itemMap.get(aSurface);
 	}
 	

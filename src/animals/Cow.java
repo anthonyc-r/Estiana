@@ -1,15 +1,20 @@
-package player;
+package animals;
 
 import interfaces.Animal;
 
-public class Player implements Animal {
-	
-	public Player(String aName){
-		this.name = aName;
-		this.health = 100.0;
-		this.power = 100.0;
+public class Cow implements Animal{
+
+	public Cow(){
+		//Gen random name
+		name = "";
+		health = 100.0;
+		power = 100.0;
 	}
-		
+	
+	public String getType() {
+		return type;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -21,12 +26,10 @@ public class Player implements Animal {
 	public double getPower() {
 		return power;
 	}
-	public String getType(){
-		return type;
-	}
 	
-	private String type = "yourself";
+	private String type = "Cow";
 	private String name;
 	private double health;
 	private double power;
+
 }
