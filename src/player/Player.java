@@ -1,8 +1,10 @@
 package player;
 
+import java.io.Serializable;
+
 import interfaces.Animal;
 
-public class Player implements Animal {
+public class Player implements Animal, Serializable {
 	
 	public Player(String aName){
 		this.name = aName;

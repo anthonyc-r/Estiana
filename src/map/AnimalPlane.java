@@ -3,10 +3,11 @@ package map;
 import interfaces.Animal;
 import interfaces.Placeable;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AnimalPlane {
+public class AnimalPlane implements Serializable{
 	
 	public AnimalPlane(Map aMap){
 		map = aMap;

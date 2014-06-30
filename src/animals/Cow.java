@@ -1,8 +1,10 @@
 package animals;
 
+import java.io.Serializable;
+
 import interfaces.Animal;
 
-public class Cow implements Animal{
+public class Cow implements Animal, Serializable{
 
 	public Cow(){
 		//Gen random name

@@ -1,11 +1,12 @@
 package map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import interfaces.Item;
 import interfaces.Placeable;
 
-public class Border implements Placeable{
+public class Border implements Placeable, Serializable{
 	
 	public Border(ArrayList<Corner> twoCorners){
 		corners.addAll(twoCorners);

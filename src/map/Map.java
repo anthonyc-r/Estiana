@@ -1,6 +1,8 @@
 package map;
 
 import interfaces.*;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  * @author meguca
  * Requires that a data file be first validated using the WurmMudToolkit class.
  */
-public class Map {
+public class Map implements Serializable {
 	
 	public Map(Input anInput){
 		//Get basic info

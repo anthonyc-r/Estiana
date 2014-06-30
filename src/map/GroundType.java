@@ -1,6 +1,8 @@
 package map;
 
-public enum GroundType {
+import java.io.Serializable;
+
+public enum GroundType implements Serializable{
 	SAND, GRASS, DIRT, SNOW, ROCK, WATER;
 	
 	public String toString(){

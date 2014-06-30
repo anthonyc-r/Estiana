@@ -1,12 +1,18 @@
 package map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import interfaces.Animal;
 import interfaces.Item;
 import interfaces.Placeable;
 
-public class Tile implements Placeable{
+/**
+ * 0N 1E 2S 3W
+ * @author meguca
+ *
+ */
+public class Tile implements Placeable, Serializable{
 	
 	public Tile(ArrayList<Corner> aCornerList){
 		//Grab the 4 corners of the tile

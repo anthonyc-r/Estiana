@@ -1,6 +1,8 @@
 package map;
 
-public class BuildingPlane {
+import java.io.Serializable;
+
+public class BuildingPlane implements Serializable {
 	
 	public BuildingPlane(Map aMap){
 		

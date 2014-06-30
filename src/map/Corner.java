@@ -1,6 +1,8 @@
 package map;
 
-public class Corner {
+import java.io.Serializable;
+
+public class Corner implements Serializable{
 	
 	public Corner(int aHeight, GroundType aGroundType){
 		groundType = aGroundType;

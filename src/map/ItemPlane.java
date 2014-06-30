@@ -1,5 +1,6 @@
 package map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +10,7 @@ import interfaces.Item;
 /*
  * The item plane hovers over the map using a reference to check item compatibility
  */
-public class ItemPlane {
+public class ItemPlane implements Serializable{
 	//Constructor
 	public ItemPlane(Map aMap){
 		itemMap = new HashMap<Placeable, ArrayList<Item>>();
