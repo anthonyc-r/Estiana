@@ -11,6 +11,9 @@ public class Corner implements Serializable{
 			groundType = GroundType.WATER;
 		}
 	}
+	public Corner(int aHeight){
+		this(aHeight, GroundType.GRASS);
+	}
 	
 	public void setHeight(int newHeight){
 		height = newHeight;

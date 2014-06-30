@@ -38,41 +38,45 @@ public class Map implements Serializable {
 	 * @param anInput
 	 */
 	private void extractTileData(Input<String> anInput){
-		int numCorners = (mapWidth+1)*(mapHeight+1);
-		int numTiles = mapWidth*mapHeight;
-		int height;
-		Tile tile;
 		
-		ArrayList<Corner> tileCorners = new ArrayList<Corner>(4);
-		ArrayList<Corner> cornerList = new ArrayList<Corner>(mapWidth+1);
-		ArrayList<ArrayList<Corner>> cornerGrid = new ArrayList<ArrayList<Corner>>(mapHeight+1);
-		tileGrid.ensureCapacity(numTiles);
+		//Vertical array, i.e. it's a vertical stick with other arrays(horz) stuck out(ycoord) |-
+		ArrayList<ArrayList<Integer>> vertList = new ArrayList<ArrayList<Integer>>(mapHeight);
 		
-		//Get a list of all tile corners put into a 2D grid
+		for(int vert=0; vert<(mapHeight+1); vert++){
+			//Add a new horizontal stick :^)
+			vertList.add(new ArrayList<Integer>(mapWidth));
+			for(int horz=0; horz<(mapWidth+1); horz++){
+				//Add first line to it
+				vertList.get(vert).add(Integer.valueOf(anInput.getInput()));
+			}
+		}
+		tileGrid = toTileArray(vertList);
+	}
+	
+	private ArrayList<ArrayList<Tile>> toTileArray(ArrayList<ArrayList<Integer>> intArray){
+		ArrayList<ArrayList<Tile>> tileArray = new ArrayList<ArrayList<Tile>>(mapHeight);
+		//Init all arrays
 		for(int i=0; i<(mapHeight+1); i++){
-			cornerList.clear();
-			
-			for(int j=0; j<(mapWidth+1); j++){
-				height = Integer.valueOf(anInput.getInput());
-				cornerList.add(new Corner(height, GroundType.GRASS));
-			}
-			
-			cornerGrid.add(cornerList);
+			tileArray.add(new ArrayList<Tile>(mapWidth));
 		}
-		//Assign tile clusters to tiles
-		for(int i=0; i<mapHeight; i++){
-			for(int j=0; j<mapWidth; j++){
-				tileCorners.clear();
-				//Add the 4 corners required for a tile
-				tileCorners.add(cornerGrid.get(i).get(j));
-				tileCorners.add(cornerGrid.get(i).get(j+1));
-				tileCorners.add(cornerGrid.get(i+1).get(j));
-				tileCorners.add(cornerGrid.get(i+1).get(j+1));
-				//Make a new tile out of them
-				tile = new Tile(tileCorners);
-				tileGrid.get(i).add(tile);
+		
+		//
+		for(int i=0; i<(mapHeight); i++){
+			for(int j=0; j<(mapWidth); j++){
+				//Make corners, as defined by
+				//TopLeft(i, j), TopRight(i, j+1), BottomLeft(i+1, j), BottomRight(i+1, j+1)
+				ArrayList<Corner> corners = new ArrayList<Corner>(4);
+				corners.add(new Corner(intArray.get(i).get(j)));
+				corners.add(new Corner(intArray.get(i).get(j+1)));
+				corners.add(new Corner(intArray.get(i+1).get(j)));
+				corners.add(new Corner(intArray.get(i+1).get(j+1)));
+				//Set up tile
+				Tile newTile = new Tile(corners);
+				//push tile onto array
+				tileArray.get(i).add(newTile);
 			}
 		}
+		return tileArray;
 	}
 	
 	/*ACCESSORS AND MUTATORS*/

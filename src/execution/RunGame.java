@@ -15,7 +15,7 @@ import map.*;
 public class RunGame {
 	
 	public static void main(String[] args){
-/*		Map estiana = new Map(new EstianaData());
+		Map estiana = new Map(new EstianaData());
 		Player player = new Player("Me");
 		TextOutput out = new TextOutput(estiana);
 		Placeable starting = estiana.getTile(0, 0);
@@ -25,7 +25,7 @@ public class RunGame {
 		out.updateText("Welcome!");
 		out.updateView(0, 0);
 		out.printFrame();
-		
+/*		
 		try{
 			FileOutputStream outStream = new FileOutputStream("test.ser");
 			ObjectOutputStream objOut = new ObjectOutputStream(outStream);
@@ -37,7 +37,7 @@ public class RunGame {
 		}
 		*/
 		
-		Map estiana = null;
+/*		Map estiana = null;
 		try{
 			FileInputStream fStream = new FileInputStream("test.ser");
 			ObjectInputStream in = new ObjectInputStream(fStream);
@@ -52,5 +52,6 @@ public class RunGame {
 		out.updateText("Welcome!");
 		out.updateView(0, 0);
 		out.printFrame();
+		*/
 	}
 }
