@@ -1,13 +1,14 @@
 package map;
 
 import java.io.Serializable;
+import static map.Map.SEA_HEIGHT;
 
 public class Corner implements Serializable{
 	
 	public Corner(int aHeight, GroundType aGroundType){
 		groundType = aGroundType;
 		height = aHeight;
-		if(aHeight < WATER_LEVEL){
+		if(aHeight < SEA_HEIGHT){
 			groundType = GroundType.WATER;
 		}
 	}
@@ -30,5 +31,4 @@ public class Corner implements Serializable{
 	private GroundType groundType;
 	private int height;
 	
-	private static int WATER_LEVEL = 30;
 }

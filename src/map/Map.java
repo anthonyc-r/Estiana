@@ -90,7 +90,7 @@ public class Map implements Serializable {
 		return mapName;
 	}
 	public Tile getTile(int x, int y){
-		return tileGrid.get(y).get(x);
+		return tileGrid.get(x).get(y);
 	}
 	public ItemPlane getItemPlane(){
 		return this.itemPlane;

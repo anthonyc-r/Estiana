@@ -55,11 +55,13 @@ public class TextOutput implements Output<String> {
 	 * Prints out the descriptor and latest information message.
 	 */
 	public void printFrame(){
+		System.out.println(DIVIDE);
 		for(String desc : mapDesc){
 			System.out.println(desc);
 		}
 		System.out.println(DIVIDE);
 		System.out.println(textBuff.get(textBuff.size()-1));
+		System.out.println(DIVIDE);
 	}
 	
 	/**
@@ -95,7 +97,6 @@ public class TextOutput implements Output<String> {
 	private String genSlopeDesc(Tile aTile){
 		int diff1 = Math.abs(aTile.getCorner(0).getHeight() - aTile.getCorner(2).getHeight());
 		int diff2 = Math.abs(aTile.getCorner(1).getHeight() - aTile.getCorner(3).getHeight());
-		this.updateText(diff1+" "+diff2+" C2 "+aTile.getCorner(2).getHeight()+" C3 "+aTile.getCorner(3).getHeight());
 		if(diff1<5 && diff2<5){
 			return "The ground is fairly level";
 		} else if(diff1<10 && diff2<10){
@@ -158,7 +159,11 @@ public class TextOutput implements Output<String> {
 			StringBuilder buff = new StringBuilder();
 			buff.append("Around you, you see ");
 			for(Animal animal : animals){
-				buff.append("a "+animal.getType()+", ");
+				if(animal.getType().equals("yourself")){
+					buff.append("yourself, ");
+				}else{
+					buff.append("a "+animal.getType()+", ");
+				}
 			}
 			return buff.toString();
 		}

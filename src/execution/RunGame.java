@@ -12,18 +12,26 @@ import inout.*;
 import interfaces.Placeable;
 import map.*;
 
+import static map.Direction.*;
+
 public class RunGame {
 	
 	public static void main(String[] args){
 		Map estiana = new Map(new EstianaData());
-		Player player = new Player("Me");
+		Player player = new Player("Me", estiana);
 		TextOutput out = new TextOutput(estiana);
 		Placeable starting = estiana.getTile(0, 0);
 		Placeable start2 = estiana.getTile(0, 1);
 		estiana.getAnimalPlane().placeAnimal(starting, player);
 		estiana.getAnimalPlane().placeAnimal(starting, new Cow());
 		out.updateText("Welcome!");
-		out.updateView(0, 0);
+		out.updateView(player.getX(), player.getY());
+		out.printFrame();
+		//Concurrent mod err if 2 or more
+		for(int i=0; i<2; i++){
+			player.move(EAST);
+		}
+		out.updateView(player.getX(), player.getY());
 		out.printFrame();
 /*		
 		try{
