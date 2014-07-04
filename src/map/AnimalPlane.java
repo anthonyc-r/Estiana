@@ -19,6 +19,8 @@ public class AnimalPlane implements Serializable{
 			for(Animal existingAnimal : animals){
 				if(existingAnimal == animal){
 					animals.remove(existingAnimal);
+					//Break out to stop concurr err
+					break;
 				}
 			}
 		}
