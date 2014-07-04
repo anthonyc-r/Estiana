@@ -7,15 +7,27 @@ import java.util.HashMap;
 import interfaces.Placeable;
 import interfaces.Item;
 
-/*
- * The item plane hovers over the map using a reference to check item compatibility
+/**
+ * The item plane is used to retrieve and store items associated with locations
+ * on the map with which it is associated with
+ * @author meguca
+ *
  */
 public class ItemPlane implements Serializable{
-	//Constructor
+	
+	/**
+	 * Creates a new item plane for a map
+	 * @param aMap			The game map with which the item plane is associated with
+	 */
 	public ItemPlane(Map aMap){
 		itemMap = new HashMap<Placeable, ArrayList<Item>>();
 	}
 	
+	/**
+	 * Returns an array of all the items on a particular surface
+	 * @param aSurface		The surface to check
+	 * @return				Items on the surface
+	 */
 	public ArrayList<Item> getItems(Placeable aSurface){
 		if(itemMap.get(aSurface) == null){
 			ArrayList<Item> newItemList = new ArrayList<Item>();
@@ -24,6 +36,13 @@ public class ItemPlane implements Serializable{
 		return itemMap.get(aSurface);
 	}
 	
+	/**
+	 * Adds an item to the array of items on a surface,
+	 * if no array exists for a surface yet, one is created
+	 * and the item is added to it.
+	 * @param surface		The surface to add to
+	 * @param item			The item to add
+	 */
 	public void placeItem(Placeable surface, Item item){
 		if(itemMap.containsKey(surface)){
 			itemMap.get(surface).add(item);

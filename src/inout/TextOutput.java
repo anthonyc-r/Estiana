@@ -94,6 +94,12 @@ public class TextOutput implements Output<String> {
 		}
 		return buff.toString();
 	}
+	
+	/**
+	 * Generates a text description of a tile's angle based on tile properties.
+	 * @param aTile			The tile to query
+	 * @return				A string description.
+	 */
 	private String genSlopeDesc(Tile aTile){
 		int diff1 = Math.abs(aTile.getCorner(0).getHeight() - aTile.getCorner(2).getHeight());
 		int diff2 = Math.abs(aTile.getCorner(1).getHeight() - aTile.getCorner(3).getHeight());
@@ -110,6 +116,12 @@ public class TextOutput implements Output<String> {
 		}
 		
 	}
+	
+	/**
+	 * Generates a description of the items on a tile.
+	 * @param aTile			The tile to query
+	 * @return				The description.
+	 */
 	private String genObjectDesc(Tile aTile){
 		ArrayList<Item> items = map.getItemPlane().getItems(aTile);
 		
@@ -127,6 +139,12 @@ public class TextOutput implements Output<String> {
 			return buff.toString();
 		}
 	}
+	
+	/**
+	 * Generates a text description of the items on the border of a tile
+	 * @param aTile				The tile to query.
+	 * @return					Desc of the items on it's borders.
+	 */
 	private String genBorderDesc(Tile aTile){
 		
 		ItemPlane iPlane = map.getItemPlane();
@@ -148,6 +166,12 @@ public class TextOutput implements Output<String> {
 			return buff.toString();
 		}
 	}
+	
+	/**
+	 * Generates a description of the animals on a tile.
+	 * @param aTile				The tile to query
+	 * @return					The desc.
+	 */
 	private String genAnimalDesc(Tile aTile){
 		ArrayList<Animal> animals = map.getAnimalPlane().getAnimals(aTile);
 		if(animals == null){

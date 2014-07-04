@@ -6,30 +6,47 @@ import java.util.ArrayList;
 import interfaces.Item;
 import interfaces.Placeable;
 
+/**
+ * A component of a 'tile', four surround a tile.
+ * @author meguca
+ *
+ */
 public class Border implements Placeable, Serializable{
 	
+	/**
+	 * Creates a new border out of the two corners at each end.
+	 * @param twoCorners		The two corners.
+	 */
 	public Border(ArrayList<Corner> twoCorners){
 		corners.addAll(twoCorners);
 		passable = true;
 	}
 	
+	/**
+	 * Check if an entity may move though a border.
+	 * @return			True if it may. False if not.
+	 */
 	public boolean isPassable(){
 		return passable;
 	}
 	
+	/**
+	 * Gets the gradient at which the border lies
+	 * @return			The gradient calculated as the differences between the corners.
+	 */
 	public int getSlope(){
 		return (corners.get(0).getHeight() - corners.get(1).getHeight());
 	}
 	
+	/**
+	 * Gets the average height of the border
+	 * @return			The average height.
+	 */
 	public int getHeight(){
 		return (corners.get(0).getHeight() + corners.get(1).getHeight())/2;
 	}
 	
-	public ArrayList<Item> getItems(){
-		return this.items;
-	}
 	
 	private boolean passable;
 	private ArrayList<Corner> corners = new ArrayList<Corner>(2);
-	private ArrayList<Item> items = new ArrayList<Item>();
 }

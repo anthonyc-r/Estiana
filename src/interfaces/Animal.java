@@ -1,5 +1,10 @@
 package interfaces;
 
+/**
+ * Animal interface!
+ * @author meguca
+ *
+ */
 public interface Animal{
 	
 	public String getType();

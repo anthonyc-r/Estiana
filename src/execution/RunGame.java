@@ -18,12 +18,6 @@ import map.*;
 import static map.Direction.*;
 
 public class RunGame {
-	Map estiana = null;
-	Player player = null;
-	TextOutput out = null;
-	Placeable startPos = null;
-	String cmd = null;
-	Scanner in = null;
 	
 	public RunGame(String name){
 		estiana = new Map(new EstianaData());
@@ -50,25 +44,30 @@ public class RunGame {
 		}
 	}
 	
-	private void evalCmd(String aCmd){
-		if(aCmd.equalsIgnoreCase("help")){
+	//m-m-muh elseifs
+	private void evalCmd(String fullCmd){
+		String halfCmd = fullCmd.split("\\s")[0];
+		
+		if(halfCmd.equalsIgnoreCase("help")){
+			out.updateText(cmds.toString());
+		}else if(halfCmd.equalsIgnoreCase("move")){
+			move(fullCmd);
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
-			//Some action
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
+		}else if(halfCmd.equalsIgnoreCase("")){
 			
-		}else if(aCmd.equalsIgnoreCase("")){
-			
+		}else{
+			out.updateText(fullCmd);
 		}
 	}
 	
@@ -82,6 +81,10 @@ public class RunGame {
 		} catch(IOException i){
 			i.printStackTrace();
 		}
+	}
+	
+	private void move(String fullCmd){
+		
 	}
 	
 	private Map loadGame(){
@@ -99,4 +102,12 @@ public class RunGame {
 		return savedMap;
 	}
 
+	
+	private Map estiana = null;
+	private Player player = null;
+	private TextOutput out = null;
+	private Placeable startPos = null;
+	private String cmd = null;
+	private Scanner in = null;
+	private static final String[] cmds = {"help", ""}; 
 }

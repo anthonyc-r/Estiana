@@ -12,6 +12,10 @@ import java.util.ArrayList;
  */
 public class Map implements Serializable {
 	
+	/**
+	 * Init a map with an input file containing corner data
+	 * @param anInput			The input associated with corner data.
+	 */
 	public Map(Input anInput){
 		//Get basic info
 		extractBasicData(anInput);
@@ -53,6 +57,12 @@ public class Map implements Serializable {
 		tileGrid = toTileArray(vertList);
 	}
 	
+	/**
+	 * Converts the array of corners to an array of tiles.
+	 * References to corners are shared between adjacent tiles.
+	 * @param intArray			The array of array of corners.
+	 * @return					A array of array of tiles.
+	 */
 	private ArrayList<ArrayList<Tile>> toTileArray(ArrayList<ArrayList<Integer>> intArray){
 		ArrayList<ArrayList<Tile>> tileArray = new ArrayList<ArrayList<Tile>>(mapHeight);
 		//Init all arrays
@@ -79,7 +89,7 @@ public class Map implements Serializable {
 		return tileArray;
 	}
 	
-	/*ACCESSORS AND MUTATORS*/
+	/*DEM GETSETS*/
 	public int getMapWidth(){
 		return mapWidth;
 	}

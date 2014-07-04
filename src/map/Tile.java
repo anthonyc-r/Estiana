@@ -8,12 +8,17 @@ import interfaces.Item;
 import interfaces.Placeable;
 
 /**
- * 0N 1E 2S 3W
+ * Represents a tile in the game map. 
+ * Where borders are stored in arrays, 0 is the North face, 1 is East, 3 is South, 4 is West.
  * @author meguca
  *
  */
 public class Tile implements Placeable, Serializable{
 	
+	/**
+	 * Init a new tile with it's four corners.
+	 * @param aCornerList			An array of corners. 0=NW, 1=NE, etc.
+	 */
 	public Tile(ArrayList<Corner> aCornerList){
 		//Grab the 4 corners of the tile
 		corners.addAll(aCornerList);
@@ -25,6 +30,7 @@ public class Tile implements Placeable, Serializable{
 		
 	}
 	
+	/**B-B-BUT ENCAPSULATION!**/
 	public Corner getCorner(int n){
 		return corners.get(n);
 	}
@@ -34,7 +40,7 @@ public class Tile implements Placeable, Serializable{
 	}
 	
 	public String toString(){
-		return "TOBEIMPLEMENTED";
+		return "implemented in textoutput now.";
 	}
 	
 	public int updateHeight(){
@@ -45,6 +51,10 @@ public class Tile implements Placeable, Serializable{
 		return avgHeight;
 	}
 	
+	/**
+	 * For use with a possible ASCII map
+	 * @return					Char representation of a tile.
+	 */
 	public char toChar(){
 		return '?';
 	}
@@ -53,14 +63,8 @@ public class Tile implements Placeable, Serializable{
 		return corners.get(0).getGroundType();
 	}
 	
-	//TODO: ADD TO ANIMAL LAYER
-	public ArrayList<Animal> getAnimals(){
-		return this.animals;
-	}
-	
-	
+
 	private ArrayList<Corner> corners = new ArrayList<Corner>(4);
 	private ArrayList<Border> borders = new ArrayList<Border>(4);
-	private ArrayList<Animal> animals = new ArrayList<Animal>();
 	private int avgHeight;
 }
