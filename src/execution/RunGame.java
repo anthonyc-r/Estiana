@@ -10,23 +10,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-import animals.Cow;
-import player.Player;
+import exceptions.EndOfMapException;
+import animals.*;
 import inout.*;
 import interfaces.Placeable;
 import map.*;
-import static map.Direction.*;
 
 public class RunGame {
 	
 	public RunGame(String name){
 		estiana = new Map(new EstianaData());
-		player = new Player(name, estiana);
 		out = new TextOutput(estiana);
+		player = new Player(name, estiana, out);
+		Cow cow = new Cow(estiana, out);
 		startPos = estiana.getTile(0, 0);
 		cmd = new String();
 		in = new Scanner(System.in);
 		estiana.getAnimalPlane().placeAnimal(startPos, player);
+		estiana.getAnimalPlane().placeAnimal(startPos, cow);
 		out.updateText("Welcome to estiana, type 'help' to view commands.");
 		out.updateView(player.getX(), player.getY());
 	}
@@ -46,29 +47,37 @@ public class RunGame {
 	
 	//m-m-muh elseifs
 	private void evalCmd(String fullCmd){
-		String halfCmd = fullCmd.split("\\s")[0];
+		String[] splitCmd = fullCmd.split("\\s");
 		
-		if(halfCmd.equalsIgnoreCase("help")){
-			out.updateText(cmds.toString());
-		}else if(halfCmd.equalsIgnoreCase("move")){
-			move(fullCmd);
-		}else if(halfCmd.equalsIgnoreCase("")){
+		if(splitCmd[0].equalsIgnoreCase("help")){
+			printHelp();
+		}else if(splitCmd[0].equalsIgnoreCase("move")){
+			move(splitCmd[1]);
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
-		}else if(halfCmd.equalsIgnoreCase("")){
+		}else if(splitCmd[0].equalsIgnoreCase("")){
 			
 		}else{
 			out.updateText(fullCmd);
 		}
+	}
+	
+	private void printHelp(){
+		StringBuilder bldr = new StringBuilder();
+		for(String cmd : cmds){
+			bldr.append(cmd+", ");
+		}
+		out.updateText(bldr.toString());
 	}
 	
 	private void saveGame(){
@@ -83,8 +92,14 @@ public class RunGame {
 		}
 	}
 	
-	private void move(String fullCmd){
-		
+	private void move(String directionStr){
+		try{
+			player.move(directionStr);
+		}catch(IllegalArgumentException e){
+			out.updateText("Invalid direction!");
+		}catch(EndOfMapException e){
+			e.getMessage();
+		}
 	}
 	
 	private Map loadGame(){
@@ -109,5 +124,5 @@ public class RunGame {
 	private Placeable startPos = null;
 	private String cmd = null;
 	private Scanner in = null;
-	private static final String[] cmds = {"help", ""}; 
+	private static final String[] cmds = {"help", "move {east, north, south, west}"}; 
 }

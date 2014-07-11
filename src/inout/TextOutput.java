@@ -2,6 +2,8 @@ package inout;
 
 import interfaces.*;
 import map.*;
+import animals.Animal;
+
 import java.util.ArrayList;
 
 public class TextOutput implements Output<String> {

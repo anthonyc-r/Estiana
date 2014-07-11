@@ -3,7 +3,6 @@ package map;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import interfaces.Animal;
 import interfaces.Item;
 import interfaces.Placeable;
 
@@ -26,8 +25,6 @@ public class Tile implements Placeable, Serializable{
 		for(int i=0; i<4; i++){
 			borders.add(new Border(new ArrayList(corners.subList(i, i+1))));
 		}
-		
-		
 	}
 	
 	/**B-B-BUT ENCAPSULATION!**/

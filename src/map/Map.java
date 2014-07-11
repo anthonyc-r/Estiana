@@ -121,5 +121,5 @@ public class Map implements Serializable {
 	private BuildingPlane buildingPlane = new BuildingPlane(this);
 	private AnimalPlane animalPlane = new AnimalPlane(this);
 	
-	public static final int SEA_HEIGHT = 100;
+	public static final int SEA_HEIGHT = 20;
 }

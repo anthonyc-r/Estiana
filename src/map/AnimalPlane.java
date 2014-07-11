@@ -1,6 +1,6 @@
 package map;
 
-import interfaces.Animal;
+import animals.Animal;
 import interfaces.Placeable;
 
 import java.io.Serializable;
