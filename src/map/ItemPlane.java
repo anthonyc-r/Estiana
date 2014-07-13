@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import interfaces.Placeable;
+import interfaces.Surface;
 import interfaces.Item;
 
 /**
@@ -20,7 +20,7 @@ public class ItemPlane implements Serializable{
 	 * @param aMap			The game map with which the item plane is associated with
 	 */
 	public ItemPlane(Map aMap){
-		itemMap = new HashMap<Placeable, ArrayList<Item>>();
+		itemMap = new HashMap<Surface, ArrayList<Item>>();
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class ItemPlane implements Serializable{
 	 * @param aSurface		The surface to check
 	 * @return				Items on the surface
 	 */
-	public ArrayList<Item> getItems(Placeable aSurface){
+	public ArrayList<Item> getItems(Surface aSurface){
 		if(itemMap.get(aSurface) == null){
 			ArrayList<Item> newItemList = new ArrayList<Item>();
 			itemMap.put(aSurface, newItemList);
@@ -43,7 +43,7 @@ public class ItemPlane implements Serializable{
 	 * @param surface		The surface to add to
 	 * @param item			The item to add
 	 */
-	public void placeItem(Placeable surface, Item item){
+	public void placeItem(Surface surface, Item item){
 		if(itemMap.containsKey(surface)){
 			itemMap.get(surface).add(item);
 		} else{
@@ -54,5 +54,5 @@ public class ItemPlane implements Serializable{
 	}
 	
 
-	private HashMap<Placeable, ArrayList<Item>> itemMap;
+	private HashMap<Surface, ArrayList<Item>> itemMap;
 }

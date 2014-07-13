@@ -1,11 +1,14 @@
 package animals;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import exceptions.EndOfMapException;
 import map.Direction;
 import map.Map;
+import map.Tile;
 import inout.TextOutput;
+import interfaces.Item;
 
 /**
  * Class representing a player character.
@@ -21,8 +24,23 @@ public class Player extends Animal implements Serializable {
 	 * @param out 			A reference to the text output
 	 */
 	public Player(String aName, Map aMap, TextOutput out){
-		super("Player", aMap, out);
+		super("yourself", aMap, out);
 		super.setName(aName);
+		map = aMap;
 	}
 	
+	public String getDesc(){
+		return "It's you!";
+	}
+	
+	public void pickUpItem(Item anItem){
+		Tile tile = map.getTile(super.getX(), super.getY());
+		ArrayList<Item> items = map.getItemPlane().getItems(tile);
+	}
+	public void dropItem(){
+		
+	}
+	
+	private Map map;
+	private ArrayList<Item> inventory = new ArrayList<Item>(10);
 }

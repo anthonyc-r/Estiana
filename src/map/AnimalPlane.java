@@ -1,7 +1,7 @@
 package map;
 
 import animals.Animal;
-import interfaces.Placeable;
+import interfaces.Surface;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class AnimalPlane implements Serializable{
 	 * @param surface		The surface to place the animal on
 	 * @param animal		The animal to be placed.
 	 */
-	public void placeAnimal(Placeable surface, Animal animal){
+	public void placeAnimal(Surface surface, Animal animal){
 		//If duplicate, remove and replace
 		for(ArrayList<Animal> animals : animalMap.values()){
 			for(Animal existingAnimal : animals){
@@ -56,10 +56,10 @@ public class AnimalPlane implements Serializable{
 	 * @param surface		The surface to be checked
 	 * @return				An array of animals on the surface
 	 */
-	public ArrayList<Animal> getAnimals(Placeable surface){
+	public ArrayList<Animal> getAnimals(Surface surface){
 		return animalMap.get(surface);
 	}
 	
 	private Map map;
-	private HashMap<Placeable, ArrayList<Animal>> animalMap = new HashMap<Placeable, ArrayList<Animal>>();
+	private HashMap<Surface, ArrayList<Animal>> animalMap = new HashMap<Surface, ArrayList<Animal>>();
 }

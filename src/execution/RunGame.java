@@ -13,7 +13,9 @@ import java.util.Scanner;
 import exceptions.EndOfMapException;
 import animals.*;
 import inout.*;
-import interfaces.Placeable;
+import interfaces.Item;
+import interfaces.Surface;
+import items.Note;
 import map.*;
 
 public class RunGame {
@@ -23,11 +25,15 @@ public class RunGame {
 		out = new TextOutput(estiana);
 		player = new Player(name, estiana, out);
 		Cow cow = new Cow(estiana, out);
+		
+		Note note = new Note("crumpled", "The exit lies to the south");
+		
 		startPos = estiana.getTile(0, 0);
 		cmd = new String();
 		in = new Scanner(System.in);
 		estiana.getAnimalPlane().placeAnimal(startPos, player);
 		estiana.getAnimalPlane().placeAnimal(startPos, cow);
+		estiana.getItemPlane().placeItem(startPos, note);
 		out.updateText("Welcome to estiana, type 'help' to view commands.");
 		out.updateView(player.getX(), player.getY());
 	}
@@ -47,25 +53,29 @@ public class RunGame {
 	
 	//m-m-muh elseifs
 	private void evalCmd(String fullCmd){
-		String[] splitCmd = fullCmd.split("\\s");
+		//TODO:Validate cmd
+		//Break into 1'st part and rest
+		int indx = fullCmd.indexOf(" ");
+		String ins = fullCmd.substring(0, (indx));
+		String target = fullCmd.substring(indx+1);		
 		
-		if(splitCmd[0].equalsIgnoreCase("help")){
+		if(ins.equalsIgnoreCase("help")){
 			printHelp();
-		}else if(splitCmd[0].equalsIgnoreCase("move")){
-			move(splitCmd[1]);
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("move")){
+			move(target);
+		}else if(ins.equalsIgnoreCase("examine")){
+			examine(estiana.getTile(player.getX(), player.getY()), target);
+		}else if(ins.equalsIgnoreCase("")){
 			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("")){
 			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("")){
 			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("")){
 			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("")){
 			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
-			
-		}else if(splitCmd[0].equalsIgnoreCase("")){
+		}else if(ins.equalsIgnoreCase("")){
 			
 		}else{
 			out.updateText(fullCmd);
@@ -74,6 +84,7 @@ public class RunGame {
 	
 	private void printHelp(){
 		StringBuilder bldr = new StringBuilder();
+		bldr.append("Commands are: ");
 		for(String cmd : cmds){
 			bldr.append(cmd+", ");
 		}
@@ -116,12 +127,32 @@ public class RunGame {
 		}
 		return savedMap;
 	}
+	
+	private void examine(Surface surface, String someEntity){
+		ArrayList<Item> items = estiana.getItemPlane().getItems(surface);
+		ArrayList<Animal> animals = estiana.getAnimalPlane().getAnimals(surface);
+		//Buildings
+		
+		//Items
+		for(Item item : items){
+			if(item.getName().equalsIgnoreCase(someEntity)){
+				out.updateText(item.getDesc());
+			}
+		}
+		//Animals
+		for(Animal animal : animals){
+			if(animal.getName().equalsIgnoreCase(someEntity)){
+				out.updateText(animal.getDesc());
+			}
+		}
+		
+	}
 
 	
 	private Map estiana = null;
 	private Player player = null;
 	private TextOutput out = null;
-	private Placeable startPos = null;
+	private Surface startPos = null;
 	private String cmd = null;
 	private Scanner in = null;
 	private static final String[] cmds = {"help", "move {east, north, south, west}"}; 

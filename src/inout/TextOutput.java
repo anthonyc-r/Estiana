@@ -20,6 +20,7 @@ public class TextOutput implements Output<String> {
 	/**
 	 * Update the text of the buffer
 	 * @param text
+	 * TODO: Ensure that the text starts a new line when max char width is exceeded.
 	 */
 	public void updateText(String someText){
 		if(textBuff.size() <= 10){
@@ -36,6 +37,8 @@ public class TextOutput implements Output<String> {
 	 * @param aMap		The relevant map.
 	 * @param viewX		The x coordinate of the top left of the view port
 	 * @param viewY		The y coordinate of the top left of the view port
+	 * TODO: Ensure the descriptions don't exceed the maximum char width by inserting \n 
+	 * 			when String.length >= maxWidth
 	 */
 	public void updateView(int viewX, int viewY){
 		Tile viewTile = map.getTile(viewX, viewY);
@@ -46,8 +49,6 @@ public class TextOutput implements Output<String> {
 		mapDesc.add(genSlopeDesc(viewTile));
 		//Describe objects on tile
 		mapDesc.add(genObjectDesc(viewTile));
-		//Describe objects on tile borders
-		mapDesc.add(genBorderDesc(viewTile));
 		//Describe animals on tile
 		mapDesc.add(genAnimalDesc(viewTile));
 		
@@ -142,32 +143,6 @@ public class TextOutput implements Output<String> {
 		}
 	}
 	
-	/**
-	 * Generates a text description of the items on the border of a tile
-	 * @param aTile				The tile to query.
-	 * @return					Desc of the items on it's borders.
-	 */
-	private String genBorderDesc(Tile aTile){
-		
-		ItemPlane iPlane = map.getItemPlane();
-		ArrayList<Item> items = new ArrayList<Item>();
-		for(int i=0; i<4; i++){	
-			items.addAll(iPlane.getItems(aTile.getBorder(i)));
-		}
-		if(items.size() == 0){
-			return "";
-		}
-		else{
-			StringBuilder buff = new StringBuilder();
-			buff.append("The ground has on it, ");
-			for(Item item : items){
-				buff.append("a ");
-				buff.append(item.getName()+",");
-				buff.append("\n");
-			}
-			return buff.toString();
-		}
-	}
 	
 	/**
 	 * Generates a description of the animals on a tile.
@@ -185,11 +160,7 @@ public class TextOutput implements Output<String> {
 			StringBuilder buff = new StringBuilder();
 			buff.append("Around you, you see ");
 			for(Animal animal : animals){
-				if(animal.getType().equals("yourself")){
-					buff.append("yourself, ");
-				}else{
-					buff.append("a "+animal.getType()+", ");
-				}
+					buff.append(animal.getName()+", ");
 			}
 			return buff.toString();
 		}

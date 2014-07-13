@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import interfaces.Item;
-import interfaces.Placeable;
+import interfaces.Surface;
 
 /**
  * Represents a tile in the game map. 
@@ -12,7 +12,7 @@ import interfaces.Placeable;
  * @author meguca
  *
  */
-public class Tile implements Placeable, Serializable{
+public class Tile implements Surface, Serializable{
 	
 	/**
 	 * Init a new tile with it's four corners.

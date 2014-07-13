@@ -83,6 +83,10 @@ public class Animal implements Serializable {
 		
 	}
 	
+	public String getDesc(){
+		return "An animal!";
+	}
+	
 	private String type;
 	private String name;
 	private double health;

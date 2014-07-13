@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 public class EstianaData implements Input<String>{
 
 	public EstianaData(){
-		estianaData = new File("estianaData.txt");
+		estianaData = new File("DATA/estianaData.txt");
 		try{	
 			dataIn = new Scanner(estianaData);
 		}

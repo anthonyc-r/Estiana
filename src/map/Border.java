@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import interfaces.Item;
-import interfaces.Placeable;
+import interfaces.Surface;
 
 /**
  * A component of a 'tile', four surround a tile.
  * @author meguca
  *
  */
-public class Border implements Placeable, Serializable{
+public class Border implements Serializable{
 	
 	/**
 	 * Creates a new border out of the two corners at each end.

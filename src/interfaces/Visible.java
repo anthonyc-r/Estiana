@@ -5,6 +5,7 @@ package interfaces;
  * @author meguca
  *
  */
-public class Visible {
+public interface Visible {
 
+	public String getDescr();
 }
