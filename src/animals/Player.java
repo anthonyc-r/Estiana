@@ -26,7 +26,6 @@ public class Player extends Animal implements Serializable {
 	public Player(String aName, Map aMap, TextOutput out){
 		super("yourself", aMap, out);
 		super.setName(aName);
-		map = aMap;
 	}
 	
 	public String getDesc(){

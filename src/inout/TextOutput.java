@@ -133,7 +133,7 @@ public class TextOutput implements Output<String> {
 		}
 		else{
 			StringBuilder buff = new StringBuilder();
-			buff.append("The ground has on it, ");
+			buff.append("The ground has on it; ");
 			for(Item item : items){
 				buff.append("a ");
 				buff.append(item.getName()+",");

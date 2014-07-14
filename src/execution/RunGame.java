@@ -54,10 +54,12 @@ public class RunGame {
 	//m-m-muh elseifs
 	private void evalCmd(String fullCmd){
 		//TODO:Validate cmd
+		//Avoid array bounds exception for single word cmd
+		fullCmd = fullCmd.concat(" ");
 		//Break into 1'st part and rest
 		int indx = fullCmd.indexOf(" ");
-		String ins = fullCmd.substring(0, (indx));
-		String target = fullCmd.substring(indx+1);		
+		String ins = fullCmd.substring(0, (indx)).trim();
+		String target = fullCmd.substring(indx+1).trim();		
 		
 		if(ins.equalsIgnoreCase("help")){
 			printHelp();
@@ -155,5 +157,5 @@ public class RunGame {
 	private Surface startPos = null;
 	private String cmd = null;
 	private Scanner in = null;
-	private static final String[] cmds = {"help", "move {east, north, south, west}"}; 
+	private static final String[] cmds = {"help", "move {east, north, south, west}", "examine {name of thing}"}; 
 }
