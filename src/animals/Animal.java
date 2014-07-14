@@ -3,8 +3,10 @@ package animals;
 import java.io.Serializable;
 
 import exceptions.EndOfMapException;
+import exceptions.TerrainTooSteepException;
 import map.Direction;
 import map.Map;
+import map.Tile;
 import inout.TextOutput;
 
 public class Animal implements Serializable {
@@ -17,8 +19,8 @@ public class Animal implements Serializable {
 	 */
 	
 	public Animal(String aType, Map aMap, TextOutput out){
-		this.xLoc = 0;
-		this.yLoc = 0;
+		this.xLoc = 1;
+		this.yLoc = 1;
 		this.type = aType;
 		//Randgen name
 		this.name = "";
@@ -58,8 +60,13 @@ public class Animal implements Serializable {
 	 * TODO: MOVE VIEW UPDATING AND ANIMAL PLACEMENT TO HERE!
 	 * @param dir			The direction in which to move.
 	 */
-	public void move(String aDir) throws IllegalArgumentException, EndOfMapException{
+	public void move(String aDir) throws IllegalArgumentException, EndOfMapException, TerrainTooSteepException{
 		Direction dir = Direction.valueOf(aDir.toUpperCase());
+		//Check borders for obstruction
+		
+		//In case move must be reverted
+		int oldX = xLoc;
+		int oldY = yLoc;
 		
 		switch(dir){
 		case NORTH:
@@ -77,14 +84,39 @@ public class Animal implements Serializable {
 		}
 		
 		//Check bounds and throw error
-		
-		gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);
-		out.updateView(this.xLoc, this.yLoc);
+		try{	
+			//Check steepness
+			if(tooSteep(gameMap.getTile(xLoc, yLoc))){
+				throw new TerrainTooSteepException();
+			}
+			
+			gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);
+			out.updateView(this.xLoc, this.yLoc);
+		}catch(ArrayIndexOutOfBoundsException e){
+			xLoc = oldX;
+			yLoc = oldY;
+			throw new EndOfMapException();
+		}
 		
 	}
 	
 	public String getDesc(){
 		return "An animal!";
+	}
+	
+	private boolean tooSteep(Tile aTile){
+		System.out.println(aTile.getCorner(0).getHeight());
+		System.out.println(aTile.getCorner(1).getHeight());
+		System.out.println(aTile.getCorner(2).getHeight());
+		System.out.println(aTile.getCorner(3).getHeight());
+		
+		int diff1 = Math.abs(aTile.getCorner(0).getHeight() - aTile.getCorner(2).getHeight());
+		int diff2 = Math.abs(aTile.getCorner(1).getHeight() - aTile.getCorner(3).getHeight());
+		if(diff1 > 30 || diff2 > 30){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	private String type;

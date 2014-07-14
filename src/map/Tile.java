@@ -9,6 +9,8 @@ import interfaces.Surface;
 /**
  * Represents a tile in the game map. 
  * Where borders are stored in arrays, 0 is the North face, 1 is East, 3 is South, 4 is West.
+ * Corners must be dealt with strangely as things assume corners go around the compass clockwise.
+ * 	Whereas corners are read in from West to East, North to South.
  * @author meguca
  *
  */
@@ -16,20 +18,42 @@ public class Tile implements Surface, Serializable{
 	
 	/**
 	 * Init a new tile with it's four corners.
-	 * @param aCornerList			An array of corners. 0=NW, 1=NE, etc.
+	 * @param cLis			An array of corners. 0=NW, 1=NE, 2=SW, 3=SE
 	 */
-	public Tile(ArrayList<Corner> aCornerList){
+	public Tile(ArrayList<Corner> cLis){
 		//Grab the 4 corners of the tile
-		corners.addAll(aCornerList);
-		//Create borders based on corners
-		for(int i=0; i<4; i++){
-			borders.add(new Border(new ArrayList(corners.subList(i, i+1))));
-		}
+		corners.addAll(cLis);
+		
+		//Create borders based on corners going clockwise around 
+		//0 1
+		//1 3
+		//3 2
+		//3 0
+		borders.add(new Border(cLis.get(0), cLis.get(1)));
+		borders.add(new Border(cLis.get(1), cLis.get(3)));
+		borders.add(new Border(cLis.get(3), cLis.get(2)));
+		borders.add(new Border(cLis.get(3), cLis.get(0)));
 	}
 	
-	/**B-B-BUT ENCAPSULATION!**/
+	/**
+	 * 0=NW, 1=NE, 2=SW, 3=SE
+	 * @param n
+	 * @return
+	 */
 	public Corner getCorner(int n){
-		return corners.get(n);
+		switch(n){
+		case 0:
+			return corners.get(0);
+		case 1:
+			return corners.get(1);
+		case 2:
+			return corners.get(3);
+		case 3:
+			return corners.get(2);
+		default:
+			//FIXMEPLS
+			return null;
+		}
 	}
 	
 	public Border getBorder(int n){

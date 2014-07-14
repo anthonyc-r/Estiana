@@ -22,6 +22,12 @@ public class Border implements Serializable{
 		passable = true;
 	}
 	
+	public Border(Corner c1, Corner c2){
+		corners.add(c1);
+		corners.add(c2);
+		passable = true;
+	}
+	
 	/**
 	 * Check if an entity may move though a border.
 	 * @return			True if it may. False if not.

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Scanner;
 
 import exceptions.EndOfMapException;
+import exceptions.TerrainTooSteepException;
 import animals.*;
 import inout.*;
 import interfaces.Item;
@@ -28,7 +29,7 @@ public class RunGame {
 		
 		Note note = new Note("crumpled", "The exit lies to the south");
 		
-		startPos = estiana.getTile(0, 0);
+		startPos = estiana.getTile(1, 1);
 		cmd = new String();
 		in = new Scanner(System.in);
 		estiana.getAnimalPlane().placeAnimal(startPos, player);
@@ -108,10 +109,13 @@ public class RunGame {
 	private void move(String directionStr){
 		try{
 			player.move(directionStr);
+			out.updateText("You move "+directionStr);
 		}catch(IllegalArgumentException e){
 			out.updateText("Invalid direction!");
 		}catch(EndOfMapException e){
-			e.getMessage();
+			out.updateText(e.getMessage());
+		}catch(TerrainTooSteepException e){
+			out.updateText(e.getMessage());
 		}
 	}
 	

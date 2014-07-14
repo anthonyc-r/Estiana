@@ -113,9 +113,9 @@ public class TextOutput implements Output<String> {
 		} else if(diff1<20 && diff2<20){
 			return "The ground is very sloped!";
 		} else if(diff1<30 && diff2<30){
-			return "The ground here is a practically a cliff!";
+			return "The ground here is a almost too steep to walk up";
 		} else {
-			return "Nahhhh, ya'know";
+			return "Unpassable";
 		}
 		
 	}
