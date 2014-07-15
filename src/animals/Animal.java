@@ -82,21 +82,22 @@ public class Animal implements Serializable {
 			xLoc -= 1;
 			break;
 		}
-		
-		//Check bounds and throw error
-		try{	
-			//Check steepness
-			if(tooSteep(gameMap.getTile(xLoc, yLoc))){
-				throw new TerrainTooSteepException();
-			}
-			
-			gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);
-			out.updateView(this.xLoc, this.yLoc);
-		}catch(ArrayIndexOutOfBoundsException e){
+		//Check bounds
+		if(xLoc > gameMap.getMapWidth() || xLoc < 0 || yLoc > gameMap.getMapHeight() || yLoc < 0){
 			xLoc = oldX;
 			yLoc = oldY;
 			throw new EndOfMapException();
 		}
+
+		//Check steepness
+		if(tooSteep(gameMap.getTile(xLoc, yLoc))){
+			xLoc = oldX;
+			yLoc = oldY;
+			throw new TerrainTooSteepException();
+		}
+			
+		gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);
+		out.updateView(this.xLoc, this.yLoc);
 		
 	}
 	

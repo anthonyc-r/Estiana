@@ -12,7 +12,7 @@ public enum Direction {
 	 * More desirable that CAPSLOCK-MODO
 	 */
 	public String toString(){
-		return this.toString().toLowerCase();
+		return super.toString().toLowerCase();
 	}
 	
 	/**

@@ -78,8 +78,8 @@ public class Map implements Serializable {
 				ArrayList<Corner> corners = new ArrayList<Corner>(4);
 				corners.add(new Corner(intArray.get(i).get(j)));
 				corners.add(new Corner(intArray.get(i).get(j+1)));
-				corners.add(new Corner(intArray.get(i+1).get(j)));
 				corners.add(new Corner(intArray.get(i+1).get(j+1)));
+				corners.add(new Corner(intArray.get(i+1).get(j)));
 				//Set up tile
 				Tile newTile = new Tile(corners);
 				//push tile onto array
@@ -100,7 +100,7 @@ public class Map implements Serializable {
 		return mapName;
 	}
 	public Tile getTile(int x, int y){
-		return tileGrid.get(x).get(y);
+		return tileGrid.get(y).get(x);
 	}
 	public ItemPlane getItemPlane(){
 		return this.itemPlane;

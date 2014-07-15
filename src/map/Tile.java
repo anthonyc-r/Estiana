@@ -24,15 +24,19 @@ public class Tile implements Surface, Serializable{
 		//Grab the 4 corners of the tile
 		corners.addAll(cLis);
 		
+		for(int i=0; i<3; i++){
+			borders.add(new Border(new ArrayList(corners.subList(i, i+2))));
+		}
+		
 		//Create borders based on corners going clockwise around 
 		//0 1
 		//1 3
 		//3 2
 		//3 0
-		borders.add(new Border(cLis.get(0), cLis.get(1)));
+		/*borders.add(new Border(cLis.get(0), cLis.get(1)));
 		borders.add(new Border(cLis.get(1), cLis.get(3)));
 		borders.add(new Border(cLis.get(3), cLis.get(2)));
-		borders.add(new Border(cLis.get(3), cLis.get(0)));
+		borders.add(new Border(cLis.get(3), cLis.get(0)));*/
 	}
 	
 	/**
@@ -41,19 +45,7 @@ public class Tile implements Surface, Serializable{
 	 * @return
 	 */
 	public Corner getCorner(int n){
-		switch(n){
-		case 0:
-			return corners.get(0);
-		case 1:
-			return corners.get(1);
-		case 2:
-			return corners.get(3);
-		case 3:
-			return corners.get(2);
-		default:
-			//FIXMEPLS
-			return null;
-		}
+		return corners.get(n);
 	}
 	
 	public Border getBorder(int n){
