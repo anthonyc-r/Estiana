@@ -21,6 +21,6 @@ public enum Direction {
 	 * @return
 	 */
 	public int toInt(){
-		return this.ordinal();
+		return super.ordinal();
 	}
 }

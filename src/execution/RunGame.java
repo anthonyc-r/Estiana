@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+import boundarys.Boundary;
+import boundarys.Wall;
+import exceptions.BoundaryAlreadyPlacedException;
 import exceptions.EndOfMapException;
+import exceptions.ObstructedPathException;
 import exceptions.TerrainTooSteepException;
 import animals.*;
 import inout.*;
@@ -26,10 +30,22 @@ public class RunGame {
 		out = new TextOutput(estiana);
 		player = new Player(name, estiana, out);
 		Cow cow = new Cow(estiana, out);
-		
-		Note note = new Note("crumpled", "The exit lies to the south");
-		
 		startPos = estiana.getTile(1, 1);
+		//item test
+		Note note = new Note("crumpled", "The exit lies to the south");
+		//Bound test
+		Boundary wall = new Wall();
+		Boundary wall2 = new Wall();
+		Boundary wall3 = new Wall();
+		try{
+			estiana.getBoundaryPlane().placeBoundary(startPos.getBorder(0), wall);
+			estiana.getBoundaryPlane().placeBoundary(startPos.getBorder(3), wall2);
+			estiana.getBoundaryPlane().placeBoundary(startPos.getBorder(2), wall3);
+		}catch(BoundaryAlreadyPlacedException e){
+			out.updateText(e.getMessage());
+			//won't happen
+		}
+		
 		cmd = new String();
 		in = new Scanner(System.in);
 		estiana.getAnimalPlane().placeAnimal(startPos, player);
@@ -116,6 +132,8 @@ public class RunGame {
 			out.updateText(e.getMessage());
 		}catch(TerrainTooSteepException e){
 			out.updateText(e.getMessage());
+		}catch(ObstructedPathException e){
+			out.updateText(e.getMessage());
 		}
 	}
 	
@@ -134,11 +152,16 @@ public class RunGame {
 		return savedMap;
 	}
 	
-	private void examine(Surface surface, String someEntity){
-		ArrayList<Item> items = estiana.getItemPlane().getItems(surface);
-		ArrayList<Animal> animals = estiana.getAnimalPlane().getAnimals(surface);
+	private void examine(Tile aTile, String someEntity){
+		ArrayList<Item> items = estiana.getItemPlane().getItems(aTile);
+		ArrayList<Animal> animals = estiana.getAnimalPlane().getAnimals(aTile);
+		ArrayList<Boundary> bounds = estiana.getBoundaryPlane().getBoundaryList(aTile);
 		//Buildings
-		
+		for(Boundary bound : bounds){
+			if(bound.getName().equalsIgnoreCase(someEntity)){
+				out.updateText(bound.getDesc());
+			}
+		}
 		//Items
 		for(Item item : items){
 			if(item.getName().equalsIgnoreCase(someEntity)){
@@ -158,7 +181,7 @@ public class RunGame {
 	private Map estiana = null;
 	private Player player = null;
 	private TextOutput out = null;
-	private Surface startPos = null;
+	private Tile startPos = null;
 	private String cmd = null;
 	private Scanner in = null;
 	private static final String[] cmds = {"help", "move {east, north, south, west}", "examine {name of thing}"}; 

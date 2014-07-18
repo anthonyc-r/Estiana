@@ -52,6 +52,10 @@ public class Border implements Serializable{
 		return (corners.get(0).getHeight() + corners.get(1).getHeight())/2;
 	}
 	
+	public Corner getCorner(int cNum){
+		return corners.get(cNum);
+	}
+	
 	
 	private boolean passable;
 	private ArrayList<Corner> corners = new ArrayList<Corner>(2);

@@ -2,8 +2,11 @@ package animals;
 
 import java.io.Serializable;
 
+import boundarys.Boundary;
 import exceptions.EndOfMapException;
+import exceptions.ObstructedPathException;
 import exceptions.TerrainTooSteepException;
+import map.Border;
 import map.Direction;
 import map.Map;
 import map.Tile;
@@ -60,7 +63,11 @@ public class Animal implements Serializable {
 	 * TODO: MOVE VIEW UPDATING AND ANIMAL PLACEMENT TO HERE!
 	 * @param dir			The direction in which to move.
 	 */
-	public void move(String aDir) throws IllegalArgumentException, EndOfMapException, TerrainTooSteepException{
+	public void move(String aDir) throws IllegalArgumentException, 
+											EndOfMapException, 
+											TerrainTooSteepException,
+											ObstructedPathException{
+		
 		Direction dir = Direction.valueOf(aDir.toUpperCase());
 		//Check borders for obstruction
 		
@@ -82,15 +89,28 @@ public class Animal implements Serializable {
 			xLoc -= 1;
 			break;
 		}
+		
+		//Get the tiles ready to check
+		Tile tileMovedFrom = gameMap.getTile(oldX, oldY);
+		Tile tileMovedTo = gameMap.getTile(xLoc, yLoc);
+			
 		//Check bounds
-		if(xLoc > gameMap.getMapWidth() || xLoc < 0 || yLoc > gameMap.getMapHeight() || yLoc < 0){
+		if(endOfMap(tileMovedTo)){
 			xLoc = oldX;
 			yLoc = oldY;
 			throw new EndOfMapException();
 		}
+		
+		//Check obstructions
+		if(isObstructed(tileMovedFrom, dir)){
+			xLoc = oldX;
+			yLoc = oldY;
+			throw new ObstructedPathException();
+			
+		}
 
 		//Check steepness
-		if(tooSteep(gameMap.getTile(xLoc, yLoc))){
+		if(tooSteep(tileMovedTo)){
 			xLoc = oldX;
 			yLoc = oldY;
 			throw new TerrainTooSteepException();
@@ -106,17 +126,27 @@ public class Animal implements Serializable {
 	}
 	
 	private boolean tooSteep(Tile aTile){
-		System.out.println(aTile.getCorner(0).getHeight());
-		System.out.println(aTile.getCorner(1).getHeight());
-		System.out.println(aTile.getCorner(2).getHeight());
-		System.out.println(aTile.getCorner(3).getHeight());
-		
 		int diff1 = Math.abs(aTile.getCorner(0).getHeight() - aTile.getCorner(2).getHeight());
 		int diff2 = Math.abs(aTile.getCorner(1).getHeight() - aTile.getCorner(3).getHeight());
 		if(diff1 > 30 || diff2 > 30){
 			return true;
 		}else{
 			return false;
+		}
+	}
+	
+	private boolean endOfMap(Tile aTile){
+		return (xLoc > gameMap.getMapWidth() || xLoc < 0 || yLoc > gameMap.getMapHeight() || yLoc < 0);
+	}
+	
+	private boolean isObstructed(Tile fromTile, Direction aDir){
+		Border bordToCheck = fromTile.getBorder(aDir.toInt());
+		Boundary boundToCheck = gameMap.getBoundaryPlane().getBoundary(bordToCheck);
+		
+		if(boundToCheck == null || boundToCheck.canPass()){
+			return false;
+		} else{
+			return true;
 		}
 	}
 	

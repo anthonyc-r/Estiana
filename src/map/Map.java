@@ -4,6 +4,8 @@ import interfaces.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * The map class
@@ -61,9 +63,9 @@ public class Map implements Serializable {
 	 * Converts the array of corners to an array of tiles.
 	 * References to corners are shared between adjacent tiles.
 	 * @param intArray			The array of array of corners.
-	 * @return					A array of array of tiles.
+	 * @return					An array of array of tiles.
 	 */
-	private ArrayList<ArrayList<Tile>> toTileArray(ArrayList<ArrayList<Integer>> intArray){
+	/*private ArrayList<ArrayList<Tile>> toTileArray(ArrayList<ArrayList<Integer>> intArray){
 		ArrayList<ArrayList<Tile>> tileArray = new ArrayList<ArrayList<Tile>>(mapHeight);
 		//Init all arrays
 		for(int i=0; i<(mapHeight+1); i++){
@@ -76,6 +78,7 @@ public class Map implements Serializable {
 				//Make corners, as defined by
 				//TopLeft(i, j), TopRight(i, j+1), BottomLeft(i+1, j), BottomRight(i+1, j+1)
 				ArrayList<Corner> corners = new ArrayList<Corner>(4);
+				//TODO: Fix this! Adjacent tiles should reference the same border.
 				corners.add(new Corner(intArray.get(i).get(j)));
 				corners.add(new Corner(intArray.get(i).get(j+1)));
 				corners.add(new Corner(intArray.get(i+1).get(j+1)));
@@ -86,6 +89,78 @@ public class Map implements Serializable {
 				tileArray.get(i).add(newTile);
 			}
 		}
+		return tileArray;
+	}*/
+	
+	/**
+	 * TURN BACK NOW BEFORE IT'S TOO LATE
+	 * Converts the array of corners to an array of tiles.
+	 * References to borders are shared between tiles, and references to corners are shared between borders.
+	 * Due to this, the tiles are made as follows: [Top Left tile][Rest of first row tiles](mapHeight+1)x[[FirstOfRowTile][RestOfRowTile]]
+	 * @param intArray			The array of array of corners.
+	 * @return					An array of array of tiles.
+	 */
+	private ArrayList<ArrayList<Tile>> toTileArray(ArrayList<ArrayList<Integer>> intArray){
+		ArrayList<ArrayList<Tile>> tileArray = new ArrayList<ArrayList<Tile>>(mapHeight);
+		//Init all arrays
+		for(int i=0; i<(mapHeight+1); i++){
+			tileArray.add(new ArrayList<Tile>(mapWidth));
+		}
+		
+		//TOP ROW
+		//First of top row
+		Corner[] ftCorns = {new Corner(intArray.get(0).get(0)),
+							new Corner(intArray.get(0).get(1)), 
+							new Corner(intArray.get(1).get(1)), 
+							new Corner(intArray.get(1).get(0))};
+		Border[] ftBords = {new Border(ftCorns[0], ftCorns[1]),
+							new Border(ftCorns[1], ftCorns[2]),
+							new Border(ftCorns[2], ftCorns[3]),
+							new Border(ftCorns[3], ftCorns[0])};
+		tileArray.get(0).add(new Tile(new ArrayList<Border>(Arrays.asList(ftBords))));
+		
+		//Rest of top row
+		for(int i=1; i<mapWidth; i++){
+			Corner[] rtCorns = {tileArray.get(0).get(i-1).getCorner(1),
+								new Corner(intArray.get(0).get(i+1)),
+								new Corner(intArray.get(1).get(i+1)),
+								tileArray.get(0).get(i-1).getCorner(2)};
+			Border[] rtBords = {new Border(rtCorns[0], rtCorns[1]),
+								new Border(rtCorns[1], rtCorns[2]),
+								new Border(rtCorns[2], rtCorns[3]),
+								tileArray.get(0).get(i-1).getBorder(1)};
+			tileArray.get(0).add(new Tile(new ArrayList<Border>(Arrays.asList(rtBords))));
+			
+		}
+		
+		//REST OF TILES
+		for(int i=1; i<mapHeight; i++){
+			//First of row
+			Corner[] frCorns = {tileArray.get(i-1).get(0).getCorner(3),
+								tileArray.get(i-1).get(0).getCorner(2), 
+								new Corner(intArray.get(i+1).get(1)), 
+								new Corner(intArray.get(1+1).get(0))};
+			Border[] frBords = {tileArray.get(i-1).get(0).getBorder(2),
+								new Border(frCorns[1], frCorns[2]),
+								new Border(frCorns[2], frCorns[3]),
+								new Border(frCorns[3], frCorns[0])};
+			tileArray.get(i).add(new Tile(new ArrayList<Border>(Arrays.asList(frBords))));
+			
+			//Rest of row
+			for(int j=1; j<mapWidth; j++){
+				Corner[] rrCorns = {tileArray.get(i-1).get(j-1).getCorner(3),
+									tileArray.get(i-1).get(j).getCorner(2),
+									new Corner(intArray.get(i+1).get(j+1)),
+									tileArray.get(i).get(j-1).getCorner(2)};
+				Border[] rrBords = {tileArray.get(i-1).get(j).getBorder(2),
+									new Border(rrCorns[1], rrCorns[2]),
+									new Border(rrCorns[2], rrCorns[3]),
+									tileArray.get(i).get(j-1).getBorder(1)};
+				tileArray.get(i).add(new Tile(new ArrayList<Border>(Arrays.asList(rrBords))));
+			}
+		}
+		
+		
 		return tileArray;
 	}
 	
@@ -105,8 +180,8 @@ public class Map implements Serializable {
 	public ItemPlane getItemPlane(){
 		return this.itemPlane;
 	}
-	public BuildingPlane getBuildingPlane(){
-		return this.buildingPlane;
+	public BoundaryPlane getBoundaryPlane(){
+		return this.boundaryPlane;
 	}
 	public AnimalPlane getAnimalPlane(){
 		return this.animalPlane;
@@ -118,7 +193,7 @@ public class Map implements Serializable {
 	private int mapHeight;
 	
 	private ItemPlane itemPlane = new ItemPlane(this);
-	private BuildingPlane buildingPlane = new BuildingPlane(this);
+	private BoundaryPlane boundaryPlane = new BoundaryPlane(this);
 	private AnimalPlane animalPlane = new AnimalPlane(this);
 	
 	public static final int SEA_HEIGHT = 20;

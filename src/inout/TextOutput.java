@@ -3,6 +3,7 @@ package inout;
 import interfaces.*;
 import map.*;
 import animals.Animal;
+import boundarys.Boundary;
 
 import java.util.ArrayList;
 
@@ -15,6 +16,8 @@ public class TextOutput implements Output<String> {
 		this.map = aMap;
 		mapDesc = new ArrayList<String>(5);
 		textBuff = new ArrayList<String>(10);
+		
+		dirVals = Direction.values();
 	}
 	
 	/**
@@ -47,6 +50,8 @@ public class TextOutput implements Output<String> {
 		mapDesc.add(genGroundDesc(viewTile));
 		//Describe ground slope
 		mapDesc.add(genSlopeDesc(viewTile));
+		//Describe boundaries 
+		mapDesc.add(genBoundDesc(viewTile));
 		//Describe objects on tile
 		mapDesc.add(genObjectDesc(viewTile));
 		//Describe animals on tile
@@ -58,13 +63,40 @@ public class TextOutput implements Output<String> {
 	 * Prints out the descriptor and latest information message.
 	 */
 	public void printFrame(){
+		//Print out the description formatted so it isn't too wide
 		System.out.println(DIVIDE);
 		for(String desc : mapDesc){
-			System.out.println(desc);
+			System.out.println(wrapText(desc, TEXT_WIDTH));
 		}
+		
+		//Print out the last text message recieved
 		System.out.println(DIVIDE);
 		System.out.println(textBuff.get(textBuff.size()-1));
 		System.out.println(DIVIDE);
+	}
+	
+	/**
+	 * Generates a description of the boundaries of a tile
+	 * @param aTile
+	 * @return
+	 */
+	private String genBoundDesc(Tile aTile){
+		StringBuilder buff = new StringBuilder();
+
+		
+		for(int i=0; i<4; i++){
+			Boundary bound = map.getBoundaryPlane().getBoundary(aTile.getBorder(i));
+			//If there is one, describe it
+			if(bound != null){
+				buff.append("You see a "+bound.getName()+" to your "+dirVals[i]+",");
+				if(bound.canPass()){
+					buff.append(" it looks like you can pass through it. ");
+				} else{
+					buff.append(" it looks impossible to pass through. ");
+				}
+			}
+		}
+		return buff.toString();
 	}
 	
 	/**
@@ -107,15 +139,15 @@ public class TextOutput implements Output<String> {
 		int diff1 = Math.abs(aTile.getCorner(0).getHeight() - aTile.getCorner(2).getHeight());
 		int diff2 = Math.abs(aTile.getCorner(1).getHeight() - aTile.getCorner(3).getHeight());
 		if(diff1<5 && diff2<5){
-			return "The ground is fairly level";
+			return "The ground is fairly level.";
 		} else if(diff1<10 && diff2<10){
 			return "The ground is slightly inclined.";
 		} else if(diff1<20 && diff2<20){
 			return "The ground is very sloped!";
 		} else if(diff1<30 && diff2<30){
-			return "The ground here is a almost too steep to walk up";
+			return "The ground here is a almost too steep to walk up.";
 		} else {
-			return "Unpassable";
+			return "The ground here is unpassable.";
 		}
 		
 	}
@@ -133,12 +165,13 @@ public class TextOutput implements Output<String> {
 		}
 		else{
 			StringBuilder buff = new StringBuilder();
-			buff.append("The ground has on it; ");
+			buff.append("The ground has on it;");
 			for(Item item : items){
-				buff.append("a ");
+				buff.append(" a ");
 				buff.append(item.getName()+",");
-				buff.append("\n");
 			}
+			//See genAnimalDesc
+			buff.setCharAt(buff.length()-1, '.');
 			return buff.toString();
 		}
 	}
@@ -158,18 +191,49 @@ public class TextOutput implements Output<String> {
 			return "";
 		} else{
 			StringBuilder buff = new StringBuilder();
-			buff.append("Around you, you see ");
+			buff.append("Around you, you see;");
 			for(Animal animal : animals){
-					buff.append(animal.getName()+", ");
+					buff.append(" "+animal.getName()+",");
 			}
+			//Don't want a trailing ','
+			//There WILL be at least one description here, no worries about a lone '.'
+			buff.setCharAt(buff.length()-1, '.');
 			return buff.toString();
 		}
+	}
+	
+	/**
+	 * Wraps text to a maximum length ready for printing out 
+	 * by inserting \n.
+	 * @param str			Text to wrap
+	 * @param width			Maximum length of the line
+	 * @return				Wrapped text
+	 */
+	private String wrapText(String str, int width){
+		//Grab a string builder for it's nice methods
+		StringBuilder editor = new StringBuilder(str);
+		//Find out how many times we need to insert \n
+		int numLines = editor.length()/width;
+		//Insert newlines
+		for(int i=1; i<=numLines; i++){
+			int insertPoint = (width*i)+1;
+			//Don't want space at the start of a line
+			if(editor.charAt(insertPoint) == ' '){
+				editor.deleteCharAt(insertPoint);
+			}
+			editor.insert(insertPoint, "\n");
+		}
+		return editor.toString();
 	}
 
 	private ArrayList<String> mapDesc;
 	private ArrayList<String> textBuff;
 	
+	//Cached values 
+	private Direction[] dirVals;
+	
 	private Map map;
 	
-	private static String DIVIDE = "------------------------------------------------------------------";
+	private static final String DIVIDE = "------------------------------------------------------------------";
+	private static final int TEXT_WIDTH = 80;
 }
