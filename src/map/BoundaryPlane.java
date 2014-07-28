@@ -8,8 +8,8 @@ import java.util.HashMap;
 
 import exceptions.BoundaryAlreadyPlacedException;
 import exceptions.BoundaryNotFoundException;
-import boundarys.Boundary;
-import boundarys.Wall;
+import boundaries.Boundary;
+import boundaries.Wall;
 
 /**
  * To be implemented in a similar way as the animal and item planes.

@@ -3,11 +3,12 @@ package inout;
 import interfaces.*;
 import map.*;
 import animals.Animal;
-import boundarys.Boundary;
+import boundaries.Boundary;
 
 import java.util.ArrayList;
+import javax.swing.JTextArea;
 
-public class TextOutput implements Output<String> {
+public class TextOutput implements Output {
 	
 	/**
 	 * Outputs two parts, a description of the area and the most recent info message
@@ -62,7 +63,7 @@ public class TextOutput implements Output<String> {
 	/**
 	 * Prints out the descriptor and latest information message.
 	 */
-	public void printFrame(){
+	public void printFrameToConsole(){
 		//Print out the description formatted so it isn't too wide
 		System.out.println(DIVIDE);
 		for(String desc : mapDesc){
@@ -73,6 +74,21 @@ public class TextOutput implements Output<String> {
 		System.out.println(DIVIDE);
 		System.out.println(textBuff.get(textBuff.size()-1));
 		System.out.println(DIVIDE);
+	}
+	
+	public void printFrameToTextArea(JTextArea textArea){
+		//Reset area ready for rewriting
+		textArea.setText("");
+		//Print out the description formatted so it isn't too wide
+		textArea.append("\n"+DIVIDE+"\n");
+		for(String desc : mapDesc){
+			textArea.append(wrapText(desc, TEXT_WIDTH)+"\n");
+		}
+		
+		//Print out the last text message recieved
+		textArea.append(DIVIDE+"\n");
+		textArea.append(textBuff.get(textBuff.size()-1)+"\n");
+		textArea.append(DIVIDE);
 	}
 	
 	/**
@@ -235,5 +251,5 @@ public class TextOutput implements Output<String> {
 	private Map map;
 	
 	private static final String DIVIDE = "------------------------------------------------------------------";
-	private static final int TEXT_WIDTH = 80;
+	private static final int TEXT_WIDTH = 121;
 }

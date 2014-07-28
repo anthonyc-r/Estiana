@@ -2,7 +2,7 @@ package animals;
 
 import java.io.Serializable;
 
-import boundarys.Boundary;
+import boundaries.Boundary;
 import exceptions.EndOfMapException;
 import exceptions.ObstructedPathException;
 import exceptions.TerrainTooSteepException;
@@ -105,7 +105,8 @@ public class Animal implements Serializable {
 		if(isObstructed(tileMovedFrom, dir)){
 			xLoc = oldX;
 			yLoc = oldY;
-			throw new ObstructedPathException();
+			Boundary boundBlocking = gameMap.getBoundaryPlane().getBoundary(tileMovedFrom.getBorder(dir.toInt()));
+			throw new ObstructedPathException(boundBlocking);
 			
 		}
 

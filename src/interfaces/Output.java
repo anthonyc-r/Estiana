@@ -1,10 +1,12 @@
 package interfaces;
 
 import map.Map;
+import javax.swing.JTextArea;
 
-public interface Output<E> {
+public interface Output {
 	
-	public void updateText(E object);
+	public void updateText(String object);
 	public void updateView(int viewX, int viewY);
-	public void printFrame();
+	public void printFrameToConsole();
+	public void printFrameToTextArea(JTextArea textArea);
 }

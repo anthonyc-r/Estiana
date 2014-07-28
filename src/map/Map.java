@@ -59,7 +59,7 @@ public class Map implements Serializable {
 		tileGrid = toTileArray(vertList);
 	}
 	
-	/**
+	/*/**
 	 * Converts the array of corners to an array of tiles.
 	 * References to corners are shared between adjacent tiles.
 	 * @param intArray			The array of array of corners.
@@ -96,7 +96,7 @@ public class Map implements Serializable {
 	 * TURN BACK NOW BEFORE IT'S TOO LATE
 	 * Converts the array of corners to an array of tiles.
 	 * References to borders are shared between tiles, and references to corners are shared between borders.
-	 * Due to this, the tiles are made as follows: [Top Left tile][Rest of first row tiles](mapHeight+1)x[[FirstOfRowTile][RestOfRowTile]]
+	 * Due to this, the tiles are made in a rather verbose way as I couldn't think of another way to do it.
 	 * @param intArray			The array of array of corners.
 	 * @return					An array of array of tiles.
 	 */
