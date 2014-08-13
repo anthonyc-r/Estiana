@@ -80,7 +80,7 @@ public class EstianaServer{
                                     logger.info("Found disconnected player, removing...");
                                     exPlrSocket.close();
                                     players.remove(exPlrSocket);
-                                    logger.info("Number of players connected: "+players.size()+".");
+                                    logger.info("Number of players connected: "+connectedPlayers.size()+".");
                                 }
                             }
                             Thread.sleep(1000);
@@ -129,7 +129,7 @@ public class EstianaServer{
                             //Add to players
                             connectedPlayers.add(new NetworkedPlayer(plrName, gameMap, newPlrSock));
                             logger.info("Added new player/socket to server list.");
-                            logger.info("Number of players connected: "+players.size()+".");
+                            logger.info("Number of players connected: "+connectedPlayers.size()+".");
                         }catch(IOException e){
                             logger.severe("Error accepting new connection.");
                             logger.severe(e.getMessage());
