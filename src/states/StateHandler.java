@@ -4,9 +4,9 @@ import animals.*;
 import interfaces.*;
 import map.Map;
 
-public class EventHandler {
+public class StateHandler {
 	
-	public EventHandler(Map aMap, Player player){
+	public StateHandler(Map aMap, Player player){
 		
 	}
 	

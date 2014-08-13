@@ -23,8 +23,8 @@ public class Player extends Animal implements Serializable {
 	 * @param aMap			The map a player is associated with.
 	 * @param out 			A reference to the text output
 	 */
-	public Player(String aName, Map aMap, TextOutput out){
-		super("yourself", aMap, out);
+	public Player(String aName, Map aMap){
+		super("yourself", aMap);
 		super.setName(aName);
 	}
 	

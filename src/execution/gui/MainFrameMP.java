@@ -12,20 +12,22 @@ import java.awt.event.ActionEvent;
 
 import java.net.*;
 import java.io.*;
+import java.util.logging.*;
 
 import execution.gui.GraphicsPanel;
 
 import map.Map;
 import animals.Player;
+import server.NetworkedPlayer;
 import execution.CommandEval;
 import inout.TextOutput;
 import inout.EstianaData;
 import interfaces.Surface;
 import map.Tile;
 
-public class MainFrame extends JFrame{
+public class MainFrameMP extends JFrame{
 	
-	public MainFrame(){
+	public MainFrameMP(){
 		setTitle(MAIN_TITLE);
 		setSize(MAIN_WIDTH, MAIN_HEIGHT);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -33,12 +35,12 @@ public class MainFrame extends JFrame{
 		setVisible(true);
 		setResizable(false);
 		initFrame();
-		initSPGame();
+		initMPGame();
 	}
 	
 	
 	public static void main(String[] args){
-		MainFrame frame = new MainFrame();
+		MainFrameMP frame = new MainFrameMP();
 		
 	}
 	
@@ -99,20 +101,50 @@ public class MainFrame extends JFrame{
 		});
 		
 	}
-	
-	private void initSPGame(){
-		gameMap = new Map(new EstianaData());
+    
+    private void initMPGame(){
+        //Set server info
+        String host = "127.0.0.1";
+        Integer port = 6666;
+        String plrName = "Testan";
+        
+        try {
+            Socket gameSocket = new Socket(host, port);
+            InputStream socketInStream = gameSocket.getInputStream();
+            OutputStream socketOutStream = gameSocket.getOutputStream();
+            
+            BufferedReader in = new BufferedReader(new InputStreamReader(socketInStream));
+            PrintWriter out = new PrintWriter(socketOutStream, true);
+            ObjectInputStream objIn = new ObjectInputStream(socketInStream);
+            //Send player name
+            out.println(plrName);
+            logger.info("Sent player name: "+plrName+".");
+            
+            //Get welcome message
+            srvWelcome = in.readLine();
+            logger.info("Got welcome message.");
+            
+            //Get game map
+            gameMap = (map.Map) objIn.readObject();
+            logger.info("Recieved map data");
+            
+        }catch(IOException e){
+            logger.warning("IOEX thrown");
+        }catch(ClassNotFoundException e){
+            System.out.println(e.getMessage());
+        }
+        
 		output = new TextOutput(gameMap);
-		player = new Player("player", gameMap);
+		player = new Player(plrName, gameMap);
 		cmdEval = new CommandEval(gameMap, output, player);
 		//place player
 		Surface startTile = gameMap.getTile(1, 1);
 		gameMap.getAnimalPlane().placeAnimal(startTile, player);
 		//Print intial frame
 		output.updateView(1, 1);
-		output.updateText(WELCOME_MSG);
+		output.updateText(srvWelcome);
 		output.printFrameToTextArea(textOutFrame);
-	}
+    }
 	
 	private void playerUpdate(){
 		output.updateView(player.getX(), player.getY());
@@ -127,7 +159,7 @@ public class MainFrame extends JFrame{
 	private JTextArea textOutFrame = null;
 	private JScrollPane tOutScrollFrame = null;
 	private GraphicsPanel gfxPanel =  null;
-	
+    
 	public static final String MAIN_TITLE = "Estiana";
 	public static final int MAIN_WIDTH = 800;
 	public static final int MAIN_HEIGHT = 600;
@@ -137,6 +169,7 @@ public class MainFrame extends JFrame{
 	private Player player = null;
 	private CommandEval cmdEval = null;
 	private TextOutput output = null;
-	
-	public static final String WELCOME_MSG = "Welcome to Estiana, type 'help' to view commands.";
+    private String srvWelcome = null;
+    
+    private static final Logger logger = Logger.getLogger(MainFrameMP.class.getName());
 }

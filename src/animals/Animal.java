@@ -21,7 +21,7 @@ public class Animal implements Serializable {
 	 * @param aMap			The map a player is associated with.
 	 */
 	
-	public Animal(String aType, Map aMap, TextOutput out){
+	public Animal(String aType, Map aMap){
 		this.xLoc = 1;
 		this.yLoc = 1;
 		this.type = aType;
@@ -30,7 +30,6 @@ public class Animal implements Serializable {
 		this.health = 100.0;
 		this.power = 100.0;
 		this.gameMap = aMap;
-		this.out = out;
 	}
 	
 	/**Dem gets dem sets**/
@@ -117,9 +116,7 @@ public class Animal implements Serializable {
 			throw new TerrainTooSteepException();
 		}
 			
-		gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);
-		out.updateView(this.xLoc, this.yLoc);
-		
+		gameMap.getAnimalPlane().placeAnimal(gameMap.getTile(xLoc, yLoc), this);	
 	}
 	
 	public String getDesc(){
@@ -158,5 +155,4 @@ public class Animal implements Serializable {
 	private int xLoc;
 	private int yLoc;
 	private Map gameMap;
-	private TextOutput out;
 }
