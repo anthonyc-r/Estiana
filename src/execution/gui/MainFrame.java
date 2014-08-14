@@ -13,12 +13,13 @@ import java.awt.event.ActionEvent;
 import java.net.*;
 import java.io.*;
 
-import execution.gui.GraphicsPanel;
+import gui.GraphicsPanel;
 
 import map.Map;
 import animals.Player;
 import execution.CommandEval;
 import inout.TextOutput;
+import gui.TextAreaTextOutput;
 import inout.EstianaData;
 import interfaces.Surface;
 import map.Tile;
@@ -91,7 +92,8 @@ public class MainFrame extends JFrame{
 		textInFrame.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				String stringIn = textInFrame.getText();
-				cmdEval.evalCmd(stringIn);
+				String cmdResult = cmdEval.evalCmd(stringIn);
+                output.updateText(cmdResult);
 				playerUpdate();
 				textInFrame.setText("");
 				
@@ -102,21 +104,21 @@ public class MainFrame extends JFrame{
 	
 	private void initSPGame(){
 		gameMap = new Map(new EstianaData());
-		output = new TextOutput(gameMap);
+		output = new TextAreaTextOutput(gameMap, textOutFrame);
 		player = new Player("player", gameMap);
-		cmdEval = new CommandEval(gameMap, output, player);
+		cmdEval = new CommandEval(gameMap, player);
 		//place player
 		Surface startTile = gameMap.getTile(1, 1);
 		gameMap.getAnimalPlane().placeAnimal(startTile, player);
 		//Print intial frame
 		output.updateView(1, 1);
 		output.updateText(WELCOME_MSG);
-		output.printFrameToTextArea(textOutFrame);
+		output.printFrame();
 	}
 	
 	private void playerUpdate(){
 		output.updateView(player.getX(), player.getY());
-		output.printFrameToTextArea(textOutFrame);
+		output.printFrame();
 	}
 	
 	//GUI STUFF

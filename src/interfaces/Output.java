@@ -7,6 +7,5 @@ public interface Output {
 	
 	public void updateText(String object);
 	public void updateView(int viewX, int viewY);
-	public void printFrameToConsole();
-	public void printFrameToTextArea(JTextArea textArea);
+    public void printFrame();
 }

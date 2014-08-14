@@ -1,8 +1,11 @@
+
+
 package server;
 
 import animals.Player;
 import map.Map;
-import execution.CmdEval;
+import execution.CommandEval;
+import server.ServerTextOutput;
 
 import java.net.*;
 
@@ -12,17 +15,18 @@ public class NetworkedPlayer extends Player{
         super(aName, aMap);
         socket = aSocket;
         //TODO: find way of passing a 'networked textOut'
-        cmdEval = new CmdEval(aMap, null, this);
+        cmdEval = new CommandEval(aMap, this);
     }
     
     public Socket getSocket(){
         return socket;
     }
     
-    public CmdEval getCmdEval(){
+    public CommandEval getCmdEval(){
         return cmdEval;
     }
     
     private Socket socket = null;
-    private CmdEval cmdEval = null;
+    private CommandEval cmdEval = null;
+    private ServerTextOutput netOut = null;
 }

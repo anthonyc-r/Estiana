@@ -1,4 +1,4 @@
-package execution.gui;
+package gui;
 
 import javax.swing.*;
 import java.awt.Graphics;

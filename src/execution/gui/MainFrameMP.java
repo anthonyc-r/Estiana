@@ -1,3 +1,8 @@
+/*
+init gui
+
+*/
+
 package execution.gui;
 
 import javax.swing.*;
@@ -12,15 +17,17 @@ import java.awt.event.ActionEvent;
 
 import java.net.*;
 import java.io.*;
+import java.util.*;
 import java.util.logging.*;
 
-import execution.gui.GraphicsPanel;
+import gui.GraphicsPanel;
 
 import map.Map;
 import animals.Player;
 import server.NetworkedPlayer;
 import execution.CommandEval;
 import inout.TextOutput;
+import gui.TextAreaTextOutput;
 import inout.EstianaData;
 import interfaces.Surface;
 import map.Tile;
@@ -34,8 +41,12 @@ public class MainFrameMP extends JFrame{
 		contentPane = getContentPane();
 		setVisible(true);
 		setResizable(false);
+        logger.info("Init frame running...");
 		initFrame();
-		initMPGame();
+        logger.info("Init game running...");
+		initGame();
+        logger.info("Running main game loop...");
+        runGame();
 	}
 	
 	
@@ -92,40 +103,42 @@ public class MainFrameMP extends JFrame{
 		//Set up action event listener for input
 		textInFrame.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				String stringIn = textInFrame.getText();
-				cmdEval.evalCmd(stringIn);
-				playerUpdate();
-				textInFrame.setText("");
-				
+				lastCommand = textInFrame.getText();
+                //Set newCommand ready for processing
+                newCommand = true;	
+                //Reset area
+                textInFrame.setText("");
 			}
 		});
 		
 	}
     
-    private void initMPGame(){
+    private void initGame(){
         //Set server info
+        Scanner inpt = new Scanner(System.in);
         String host = "127.0.0.1";
         Integer port = 6666;
-        String plrName = "Testan";
+        String plrName = inpt.nextLine();
         
         try {
-            Socket gameSocket = new Socket(host, port);
-            InputStream socketInStream = gameSocket.getInputStream();
-            OutputStream socketOutStream = gameSocket.getOutputStream();
+            gameSocket = new Socket(host, port);
+            socketInStream = gameSocket.getInputStream();
+            socketOutStream = gameSocket.getOutputStream();
             
-            BufferedReader in = new BufferedReader(new InputStreamReader(socketInStream));
-            PrintWriter out = new PrintWriter(socketOutStream, true);
-            ObjectInputStream objIn = new ObjectInputStream(socketInStream);
+            netIn = new BufferedReader(new InputStreamReader(socketInStream));
+            netOut = new PrintWriter(socketOutStream, true);
+            
+            objectIn = new ObjectInputStream(socketInStream);
             //Send player name
-            out.println(plrName);
+            netOut.println(plrName);
             logger.info("Sent player name: "+plrName+".");
             
             //Get welcome message
-            srvWelcome = in.readLine();
+            srvWelcome = netIn.readLine();
             logger.info("Got welcome message.");
             
             //Get game map
-            gameMap = (map.Map) objIn.readObject();
+            gameMap = (map.Map) objectIn.readObject();
             logger.info("Recieved map data");
             
         }catch(IOException e){
@@ -133,22 +146,54 @@ public class MainFrameMP extends JFrame{
         }catch(ClassNotFoundException e){
             System.out.println(e.getMessage());
         }
+    }
+    
+    private void runGame(){
+        while(true){    
+            try{
+                //IF COMMAND INPUT
+                //Wait until server has got to this player
+                logger.info("Waiting until server sends ready to recieve message...");
+                socketInStream.read();
+                logger.info("Server ready.");
+                if(newCommand){
+                    logger.info("New command entered.");
+                    //Send cmd indicator byte
+                    socketOutStream.write(COMMAND_WAITING);
+                    logger.info("Sent command waiting signal.");
+                    //Send command
+                    netOut.println(lastCommand);
+                    logger.info("Sent command entered.");
+                    //Reset command flag
+                    newCommand = false;
+                    //Get frame from server
+                    logger.info("Attempting to read new description from server...");
+                    String frame = netIn.readLine();
+                    logger.info("Read new description from server.");
+                    //print local frame
+                    textOutFrame.setText("");
+                    textOutFrame.append(frame);
+                }else{
+                    //send nocmd indicator byte            
+                    socketOutStream.write(NO_COMMAND);
+                }
+            }catch(IOException e){
+                logger.severe("IOException while sending command to server.");
+                System.exit(-1);
+            }
         
-		output = new TextOutput(gameMap);
-		player = new Player(plrName, gameMap);
-		cmdEval = new CommandEval(gameMap, output, player);
-		//place player
-		Surface startTile = gameMap.getTile(1, 1);
-		gameMap.getAnimalPlane().placeAnimal(startTile, player);
-		//Print intial frame
-		output.updateView(1, 1);
-		output.updateText(srvWelcome);
-		output.printFrameToTextArea(textOutFrame);
+            //Sleep until next cycle
+            try{
+                Thread.sleep(CLIENT_TICK);
+            }catch(InterruptedException e){
+                logger.warning("Main thread wait interrupted");
+            }
+        }
     }
 	
 	private void playerUpdate(){
 		output.updateView(player.getX(), player.getY());
-		output.printFrameToTextArea(textOutFrame);
+		output.printFrame();
 	}
 	
 	//GUI STUFF
@@ -170,6 +215,22 @@ public class MainFrameMP extends JFrame{
 	private CommandEval cmdEval = null;
 	private TextOutput output = null;
     private String srvWelcome = null;
+    private String lastCommand = null;
+    
+    private boolean newCommand = false;
+    
+    //NETWORKING STUFF
+    Socket gameSocket = null;
+    InputStream socketInStream = null;
+    OutputStream socketOutStream = null;
+    PrintWriter netOut = null;
+    BufferedReader netIn = null;
+    ObjectInputStream objectIn = null;
+    
+    private static final int CLIENT_TICK = 1500;
+    private static final int COMMAND_WAITING = 10;
+    private static final int NO_COMMAND = 11;
+    private static final int READY_TO_READ = 12;
     
     private static final Logger logger = Logger.getLogger(MainFrameMP.class.getName());
 }

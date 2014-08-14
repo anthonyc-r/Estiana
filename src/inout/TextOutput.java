@@ -8,7 +8,7 @@ import boundaries.Boundary;
 import java.util.ArrayList;
 import javax.swing.JTextArea;
 
-public class TextOutput implements Output {
+public class TextOutput{
 	
 	/**
 	 * Outputs two parts, a description of the area and the most recent info message
@@ -20,6 +20,22 @@ public class TextOutput implements Output {
 		
 		dirVals = Direction.values();
 	}
+    
+    /**
+     * Get the map description
+     * @return mapDesc An arraylist of descriptions, describing each aspect of the land
+     */
+    public ArrayList<String> getMapDesc(){
+        return mapDesc;
+    }
+    
+    /**
+     * Get the text buffer
+     * @return textBuff An array list containing the text messages to the user
+     */
+    public ArrayList<String> getTextBuff(){
+        return textBuff;
+    }
 	
 	/**
 	 * Update the text of the buffer
@@ -59,11 +75,11 @@ public class TextOutput implements Output {
 		mapDesc.add(genAnimalDesc(viewTile));
 		
 	}
-	
+    
 	/**
 	 * Prints out the descriptor and latest information message.
 	 */
-	public void printFrameToConsole(){
+	public void printFrame(){
 		//Print out the description formatted so it isn't too wide
 		System.out.println(DIVIDE);
 		for(String desc : mapDesc){
@@ -75,20 +91,29 @@ public class TextOutput implements Output {
 		System.out.println(textBuff.get(textBuff.size()-1));
 		System.out.println(DIVIDE);
 	}
-	
-	public void printFrameToTextArea(JTextArea textArea){
-		//Reset area ready for rewriting
-		textArea.setText("");
-		//Print out the description formatted so it isn't too wide
-		textArea.append("\n"+DIVIDE+"\n");
-		for(String desc : mapDesc){
-			textArea.append(wrapText(desc, TEXT_WIDTH)+"\n");
+    
+	/**
+	 * Wraps text to a maximum length ready for printing out 
+	 * by inserting \n.
+	 * @param str			Text to wrap
+	 * @param width			Maximum length of the line
+	 * @return				Wrapped text
+	 */
+	public String wrapText(String str, int width){
+		//Grab a string builder for it's nice methods
+		StringBuilder editor = new StringBuilder(str);
+		//Find out how many times we need to insert \n
+		int numLines = editor.length()/width;
+		//Insert newlines
+		for(int i=1; i<=numLines; i++){
+			int insertPoint = (width*i)+1;
+			//Don't want space at the start of a line
+			if(editor.charAt(insertPoint) == ' '){
+				editor.deleteCharAt(insertPoint);
+			}
+			editor.insert(insertPoint, "\n");
 		}
-		
-		//Print out the last text message recieved
-		textArea.append(DIVIDE+"\n");
-		textArea.append(textBuff.get(textBuff.size()-1)+"\n");
-		textArea.append(DIVIDE);
+		return editor.toString();
 	}
 	
 	/**
@@ -217,30 +242,6 @@ public class TextOutput implements Output {
 			return buff.toString();
 		}
 	}
-	
-	/**
-	 * Wraps text to a maximum length ready for printing out 
-	 * by inserting \n.
-	 * @param str			Text to wrap
-	 * @param width			Maximum length of the line
-	 * @return				Wrapped text
-	 */
-	private String wrapText(String str, int width){
-		//Grab a string builder for it's nice methods
-		StringBuilder editor = new StringBuilder(str);
-		//Find out how many times we need to insert \n
-		int numLines = editor.length()/width;
-		//Insert newlines
-		for(int i=1; i<=numLines; i++){
-			int insertPoint = (width*i)+1;
-			//Don't want space at the start of a line
-			if(editor.charAt(insertPoint) == ' '){
-				editor.deleteCharAt(insertPoint);
-			}
-			editor.insert(insertPoint, "\n");
-		}
-		return editor.toString();
-	}
 
 	private ArrayList<String> mapDesc;
 	private ArrayList<String> textBuff;
@@ -250,6 +251,6 @@ public class TextOutput implements Output {
 	
 	private Map map;
 	
-	private static final String DIVIDE = "------------------------------------------------------------------";
-	private static final int TEXT_WIDTH = 121;
+	public static final String DIVIDE = "------------------------------------------------------------------";
+	public static final int TEXT_WIDTH = 121;
 }

@@ -28,9 +28,8 @@ import execution.gui.*;
 
 public class CommandEval {
 	
-	public CommandEval(Map aGameMap, TextOutput aTextOut, Player aPlayer){
+	public CommandEval(Map aGameMap, Player aPlayer){
 		estiana = aGameMap;
-		out = aTextOut;
 		player = aPlayer;
 	}
 	
@@ -39,7 +38,7 @@ public class CommandEval {
 
 	
 	//m-m-muh elseifs
-	public void evalCmd(String fullCmd){
+	public String evalCmd(String fullCmd){
 		//TODO:Validate cmd
 		//Avoid array bounds exception for single word cmd
 		fullCmd = fullCmd.concat(" ");
@@ -66,9 +65,9 @@ public class CommandEval {
 			
 		}else if(ins.equalsIgnoreCase("")){
 			
-		}else{
-			out.updateText(fullCmd);
 		}
+        
+        return textResult;
 	}
 	
 	private void printHelp(){
@@ -77,7 +76,7 @@ public class CommandEval {
 		for(String cmd : cmds){
 			bldr.append(cmd+", ");
 		}
-		out.updateText(bldr.toString());
+		textResult = bldr.toString();
 	}
 	
 	private void saveGame(){
@@ -95,15 +94,15 @@ public class CommandEval {
 	private void move(String directionStr){
 		try{
 			player.move(directionStr);
-			out.updateText("You move "+directionStr);
+			textResult = "You move "+directionStr;
 		}catch(IllegalArgumentException e){
-			out.updateText("Invalid direction!");
+			textResult = "Invalid direction!";
 		}catch(EndOfMapException e){
-			out.updateText(e.getMessage());
+			textResult = e.getMessage();
 		}catch(TerrainTooSteepException e){
-			out.updateText(e.getMessage());
+			textResult = e.getMessage();
 		}catch(ObstructedPathException e){
-			out.updateText(e.getMessage());
+			textResult = e.getMessage();
 		}
 	}
 	
@@ -129,19 +128,19 @@ public class CommandEval {
 		//Buildings
 		for(Boundary bound : bounds){
 			if(bound.getName().equalsIgnoreCase(someEntity)){
-				out.updateText(bound.getDesc());
+				textResult = bound.getDesc();
 			}
 		}
 		//Items
 		for(Item item : items){
 			if(item.getName().equalsIgnoreCase(someEntity)){
-				out.updateText(item.getDesc());
+				textResult = item.getDesc();
 			}
 		}
 		//Animals
 		for(Animal animal : animals){
 			if(animal.getName().equalsIgnoreCase(someEntity)){
-				out.updateText(animal.getDesc());
+				textResult = animal.getDesc();
 			}
 		}
 		
@@ -150,7 +149,7 @@ public class CommandEval {
 	
 	private Map estiana = null;
 	private Player player = null;
-	private TextOutput out = null;
-	
+	private String textResult = null;
+    
 	private static final String[] cmds = {"help", "move {east, north, south, west}", "examine {name of thing}"}; 
 }

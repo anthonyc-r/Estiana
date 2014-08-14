@@ -1,4 +1,4 @@
-package ui;
+package gui;
 
 /**
  * Possible use as a main menu? maybe
