@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import interfaces.Item;
 import interfaces.Surface;
 
+import map.Direction;
+import exceptions.InvalidDirectionException;
+
 /**
  * Represents a tile in the game map. 
  * Where borders are stored in arrays, 0 is the North face, 1 is East, 3 is South, 4 is West.
@@ -58,10 +61,40 @@ public class Tile implements Surface, Serializable{
 	public Corner getCorner(int n){
 		return borders.get(n).getCorner(0);
 	}
+    
+    public Corner getCorner(Direction aDirection) throws InvalidDirectionException{
+        switch(aDirection){
+            case NORTH_EAST:
+                return getCorner(1);
+            case SOUTH_EAST:
+                return getCorner(3);
+            case SOUTH_WEST:
+                return getCorner(2);
+            case NORTH_WEST:
+                return getCorner(0);
+            default:
+                throw new InvalidDirectionException();
+        }
+    }
 	
 	public Border getBorder(int n){
 		return borders.get(n);
 	}
+    
+    public Border getBorder(Direction aDirection) throws InvalidDirectionException{
+        switch(aDirection){
+            case NORTH:
+                return borders.get(0);
+            case EAST:
+                return borders.get(1);
+            case SOUTH:
+                return borders.get(2);
+            case WEST:
+                return borders.get(3);
+            default:
+                throw new InvalidDirectionException();
+        }
+    }
 	
 	public String toString(){
 		return "implemented in textoutput now.";

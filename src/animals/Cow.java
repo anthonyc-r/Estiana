@@ -2,12 +2,12 @@ package animals;
 
 import java.io.Serializable;
 
-import map.Map;
+import map.GameMap;
 import inout.TextOutput;
 
 public class Cow extends Animal implements Serializable{
 
-	public Cow(Map aMap){
+	public Cow(GameMap aMap){
 		super("Cow", aMap);
 		super.setName("Molly");
 	}

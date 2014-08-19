@@ -15,7 +15,7 @@ import java.io.*;
 
 import gui.GraphicsPanel;
 
-import map.Map;
+import map.GameMap;
 import animals.Player;
 import execution.CommandEval;
 import inout.TextOutput;
@@ -103,7 +103,7 @@ public class MainFrame extends JFrame{
 	}
 	
 	private void initSPGame(){
-		gameMap = new Map(new EstianaData());
+		gameMap = new GameMap(new EstianaData());
 		output = new TextAreaTextOutput(gameMap, textOutFrame);
 		player = new Player("player", gameMap);
 		cmdEval = new CommandEval(gameMap, player);
@@ -135,7 +135,7 @@ public class MainFrame extends JFrame{
 	public static final int MAIN_HEIGHT = 600;
 	
 	//GAME LOGIC STUFF
-	private Map gameMap = null;
+	private GameMap gameMap = null;
 	private Player player = null;
 	private CommandEval cmdEval = null;
 	private TextOutput output = null;

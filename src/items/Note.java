@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import interfaces.Item;
+import items.ItemType;
 
 public class Note implements Item {
 	
@@ -18,16 +19,16 @@ public class Note implements Item {
 		content = txtContent;
 	}
 	
-	public String getType(){
-		return Note.type;
+	public ItemType getType(){
+		return type;
 	}
 	
 	public String getName(){
-		return adjective +" "+type;
+		return type.toString();
 	}
 	
 	public String getDesc(){
-		return "The writing on the "+ adjective+" "+type+" says: \""+content+"\"";
+		return "The writing on the "+type.toString()+" says: \""+content+"\"";
 	}
 	
 	/**
@@ -44,7 +45,7 @@ public class Note implements Item {
 	
 	private String content;
 	private String adjective;
-	private static String type = "paper note";
+	private ItemType type = ItemType.NOTE;
 	//TODO: Add recipe
 	private static final String[] RECIPE = {"paper", "pen"};
 }

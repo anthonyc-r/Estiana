@@ -19,7 +19,7 @@ public class ItemPlane implements Serializable{
 	 * Creates a new item plane for a map
 	 * @param aMap			The game map with which the item plane is associated with
 	 */
-	public ItemPlane(Map aMap){
+	public ItemPlane(GameMap aMap){
 		itemMap = new HashMap<Surface, ArrayList<Item>>();
 	}
 	

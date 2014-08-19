@@ -6,7 +6,7 @@ package map;
  *
  */
 public enum Direction {
-	NORTH, EAST, SOUTH, WEST;
+	NORTH, EAST, SOUTH, WEST, NORTH_WEST, NORTH_EAST, SOUTH_EAST, SOUTH_WEST;
 	
 	/**
 	 * More desirable that CAPSLOCK-MODO

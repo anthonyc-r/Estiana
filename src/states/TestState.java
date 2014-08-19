@@ -6,7 +6,7 @@ import map.*;
 
 public class TestState implements State{
 	
-	public TestState(Map gameMap){
+	public TestState(GameMap gameMap){
 		aPlane = gameMap.getAnimalPlane();
 		bPlane = gameMap.getBoundaryPlane();
 		iPlane = gameMap.getItemPlane();

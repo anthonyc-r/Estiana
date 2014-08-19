@@ -23,7 +23,7 @@ public class BoundaryPlane implements Serializable {
 	 * Init a plane and associate it with a map.
 	 * @param aMap
 	 */
-	public BoundaryPlane(Map aMap){
+	public BoundaryPlane(GameMap aMap){
 		this.map = aMap;
 	}
 	
@@ -50,6 +50,6 @@ public class BoundaryPlane implements Serializable {
 		return boundList;
 	}
 	
-	private Map map;
+	private GameMap map;
 	private HashMap<Border, Boundary> boundaryMap = new HashMap<Border, Boundary>();
 }

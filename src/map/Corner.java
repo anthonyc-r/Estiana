@@ -1,7 +1,7 @@
 package map;
 
 import java.io.Serializable;
-import static map.Map.SEA_HEIGHT;
+import static map.GameMap.SEA_HEIGHT;
 
 /**
  * Represents one of the four vertices that make up a tile.
@@ -43,6 +43,14 @@ public class Corner implements Serializable{
 		return this.height;
 	}
 	
+    /**
+    * Adds x to the height of the corner 
+    * @param change             The amount to add to the height
+    */
+    public void addHeight(int change){
+        height += change;
+    }
+    
 	/**
 	 * Gets the type of ground of the corner
 	 * @return					The corners ground type.
@@ -50,6 +58,10 @@ public class Corner implements Serializable{
 	public GroundType getGroundType(){
 		return this.groundType;
 	}
+    
+    public void setGroundType(GroundType grndType){
+        this.groundType = grndType;
+    }
 	
 	private GroundType groundType;
 	private int height;

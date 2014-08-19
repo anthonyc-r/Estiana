@@ -1,13 +1,13 @@
 package server;
 
 import inout.TextOutput;
-import map.Map;
+import map.GameMap;
 
 import java.net.*;
 
 public class ServerTextOutput extends TextOutput{
     
-    public ServerTextOutput(Map gameMap, Socket aSocket){
+    public ServerTextOutput(GameMap gameMap, Socket aSocket){
         super(gameMap);
         outputSocket = aSocket;
     }

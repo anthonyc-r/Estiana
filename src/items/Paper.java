@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import interfaces.Item;
+import items.ItemType;
 
 public class Paper implements Item {
 
@@ -11,16 +12,16 @@ public class Paper implements Item {
 		//Set adjective
 	}
 	
-	public String getType(){
+	public ItemType getType(){
 		return this.type;
 	}
 	
 	public String getName() {
-		return adjective+" "+type;
+		return adjective+" "+type.toString();
 	}
 
 	public String getDesc() {
-		return "A piece of "+type+", "+adjective+". You can write notes on this.";
+		return "A piece of "+type.toString()+". You can write notes on this.";
 	}
 
 	public ArrayList<String> getRecipe() {
@@ -32,7 +33,7 @@ public class Paper implements Item {
 	}
 	
 	private String adjective;
-	private String type = "paper";
+	private ItemType type = ItemType.PAPER;
 	//TODO: Add recipe
 	private static final String[] RECIPE = {};
 }

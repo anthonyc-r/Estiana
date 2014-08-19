@@ -19,7 +19,7 @@ public class AnimalPlane implements Serializable{
 	 * Creates a new animal plane
 	 * @param aMap			The map with which the plane is associated with
 	 */
-	public AnimalPlane(Map aMap){
+	public AnimalPlane(GameMap aMap){
 		map = aMap;
 	}
 	
@@ -60,6 +60,6 @@ public class AnimalPlane implements Serializable{
 		return animalMap.get(surface);
 	}
 	
-	private Map map;
+	private GameMap map;
 	private HashMap<Surface, ArrayList<Animal>> animalMap = new HashMap<Surface, ArrayList<Animal>>();
 }

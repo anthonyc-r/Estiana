@@ -2,11 +2,11 @@ package events;
 
 import animals.*;
 import interfaces.*;
-import map.Map;
+import map.GameMap;
 
 public class StateHandler {
 	
-	public StateHandler(Map aMap, Player player){
+	public StateHandler(GameMap aMap, Player player){
 		
 	}
 	

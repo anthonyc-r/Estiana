@@ -8,12 +8,14 @@ import boundaries.Boundary;
 import java.util.ArrayList;
 import javax.swing.JTextArea;
 
+import java.util.logging.*;
+
 public class TextOutput{
 	
 	/**
 	 * Outputs two parts, a description of the area and the most recent info message
 	 */
-	public TextOutput(Map aMap){
+	public TextOutput(GameMap aMap){
 		this.map = aMap;
 		mapDesc = new ArrayList<String>(5);
 		textBuff = new ArrayList<String>(10);
@@ -61,8 +63,11 @@ public class TextOutput{
 	 * 			when String.length >= maxWidth
 	 */
 	public void updateView(int viewX, int viewY){
+        logger.info("Getting view tile...");
 		Tile viewTile = map.getTile(viewX, viewY);
+        logger.info("Clearing previous description...");
 		mapDesc.clear();
+        logger.info("Generating descriptions...");
 		//Describe ground type
 		mapDesc.add(genGroundDesc(viewTile));
 		//Describe ground slope
@@ -249,8 +254,10 @@ public class TextOutput{
 	//Cached values 
 	private Direction[] dirVals;
 	
-	private Map map;
+	private GameMap map;
 	
 	public static final String DIVIDE = "------------------------------------------------------------------";
 	public static final int TEXT_WIDTH = 121;
+    
+    private static final Logger logger = Logger.getLogger(TextOutput.class.getName());
 }

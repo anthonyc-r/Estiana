@@ -28,7 +28,7 @@ Start thread2)
 
 package server;
 
-import map.Map;
+import map.GameMap;
 import inout.*;
 import animals.*;
 import execution.CommandEval;
@@ -74,24 +74,27 @@ public class EstianaServer{
     
     public void initServer(){
         //Initiate new map
-        gameMap = new Map(new EstianaData());
+        gameMap = new GameMap(new EstianaData());
         //Add animals
         //Add buildings
     }
     
     private void runServer(){
+        int cmdStatus = NO_COMMAND;
+        NetworkedPlayer conPlayer = null;
+        Socket conPlayerSocket = null;
+        OutputStream conPlayerOutStream = null;
+        InputStream conPlayerInStream = null;
+        BufferedReader textReader = null;
+        PrintWriter textWriter = null;
+        ObjectOutputStream objectOut = null;
+        
         while(true){
             //For all players in conPlayers
             Iterator conPlayersIter = connectedPlayers.iterator();
             while(conPlayersIter.hasNext()){
-                int cmdStatus = NO_COMMAND;
-                NetworkedPlayer conPlayer = null;
-                Socket conPlayerSocket = null;
-                OutputStream conPlayerOutStream = null;
-                InputStream conPlayerInStream = null;
-                BufferedReader textReader = null;
-                PrintWriter textWriter = null;
-                
+                //Get next player
+                logger.info("Fetching next connected player...");
                 conPlayer = (NetworkedPlayer)conPlayersIter.next();
                 
                 //always use protection
@@ -102,6 +105,7 @@ public class EstianaServer{
                 
                     textReader = new BufferedReader(new InputStreamReader(conPlayerInStream));
                     textWriter = new PrintWriter(conPlayerOutStream, true);
+                    objectOut = new ObjectOutputStream(conPlayerOutStream);
                     
                     //Indicate server has got to client
                     conPlayerOutStream.write(1);
@@ -110,16 +114,9 @@ public class EstianaServer{
                     logger.info("Attempting to read cmdStatus from instream.");
                     cmdStatus = conPlayerInStream.read();
                     logger.info("Read from instream.");
-                    //Check if player disconnected
-                    if(cmdStatus == -1){
-                        //read returned -1, client disconnected
-                        logger.info("Found disconnected player, removing...");
-                        conPlayerSocket.close();
-                        connectedPlayers.remove(conPlayer);
-                        logger.info("Number of players connected: "+connectedPlayers.size()+".");
-                    }
+                    
                     //Check if cmdStatus indicates cmd waiting
-                    else if(cmdStatus == COMMAND_WAITING){
+                    if(cmdStatus == COMMAND_WAITING){
                         String command = null;
                         String commandResult = null;
                         logger.info("Command from client waiting, attempting to read...");
@@ -129,9 +126,22 @@ public class EstianaServer{
                         //process command
                         commandResult = conPlayer.getCmdEval().evalCmd(command);
                         logger.info("Evaluated command and got result, attempting to send result...");
-                        //Send frame to client
+                        //Send result to client
                         //Thread.sleep(2000);
                         textWriter.println(commandResult);
+                        //Send updated map to client
+                        logger.info("Sending map to client...");
+                        objectOut.writeObject(gameMap);
+                        objectOut.flush();
+                        //Wait for ready to read...
+                        //conPlayerInStream.read();
+                        //Send updated player to client
+                        logger.info("Sending player to client...");
+                        objectOut.writeObject(conPlayer);
+                        objectOut.flush();
+                        
+                        //conPlayerInStream.read();
+                        logger.info("Client recieved updates successfully.");
                     }
                     //Check if cmdStatus indicates no cmd waiting
                     else if(cmdStatus == NO_COMMAND){
@@ -141,8 +151,10 @@ public class EstianaServer{
                     }
                     
                 }catch(IOException e){
-                    logger.severe("IOException thrown communicating with client");
-                    System.exit(-1);
+                    logger.severe("IOException thrown communicating with client, removing client...");
+                    conPlayersIter.remove();
+                    logger.info("Number of players connected: "+connectedPlayers.size()+"."); 
+                    //System.exit(-1);
                 }/*catch(InterruptedException e){
                     logger.warning("Main thread interrupted.");
                     System.exit(-1);
@@ -181,14 +193,12 @@ public class EstianaServer{
                             logger.info("Got name "+plrName+".");
                             //Send welcome message
                             out.println(welcomeMsg);
-                            out.flush();
                             logger.info("Sent welcome message "+welcomeMsg+".");
                             
                             //Wait to let client catch up 
                             //TODO:Learn some basic networking :^)   
-                            Thread.sleep(100);
+                            Thread.sleep(1000);
                             objOut.writeObject(gameMap);
-                            objOut.flush();
                             logger.info("Sent game map.");
                             
                             //Add to players
@@ -207,10 +217,9 @@ public class EstianaServer{
         
     }
     
-    
     private Integer port = null;
     private Scanner cmdIn = null;
-    private Map gameMap = null;
+    private GameMap gameMap = null;
     private ServerSocket serverSocket = null;
     private ArrayList<NetworkedPlayer> connectedPlayers = null;
     private String welcomeMsg = null;
@@ -218,7 +227,7 @@ public class EstianaServer{
     
     private static int playerCount = 0;
     
-    private static final int SERVER_TICK = 1000;
+    private static final int SERVER_TICK = 3000;
     private static final int COMMAND_WAITING = 10;
     private static final int NO_COMMAND = 11;
     private static final int READY_TO_READ = 12;

@@ -12,13 +12,13 @@ import java.util.Collections;
  * @author meguca
  * Requires that a data file be first validated using the WurmMudToolkit class.
  */
-public class Map implements Serializable {
+public class GameMap implements Serializable {
 	
 	/**
 	 * Init a map with an input file containing corner data
 	 * @param anInput			The input associated with corner data.
 	 */
-	public Map(Input anInput){
+	public GameMap(Input anInput){
 		//Get basic info
 		extractBasicData(anInput);
 		//Set up map arrays appropriately

@@ -22,7 +22,7 @@ import java.util.logging.*;
 
 import gui.GraphicsPanel;
 
-import map.Map;
+import map.GameMap;
 import animals.Player;
 import server.NetworkedPlayer;
 import execution.CommandEval;
@@ -136,10 +136,15 @@ public class MainFrameMP extends JFrame{
             //Get welcome message
             srvWelcome = netIn.readLine();
             logger.info("Got welcome message.");
-            
+
             //Get game map
-            gameMap = (map.Map) objectIn.readObject();
+            gameMap = (GameMap) objectIn.readObject();
             logger.info("Recieved map data");
+            
+            output = new TextAreaTextOutput(gameMap, textOutFrame);
+            output.updateText(srvWelcome);
+            output.updateView(0, 0);
+            output.printFrame();
             
         }catch(IOException e){
             logger.warning("IOEX thrown");
@@ -167,18 +172,30 @@ public class MainFrameMP extends JFrame{
                     //Reset command flag
                     newCommand = false;
                     //Get frame from server
-                    logger.info("Attempting to read new description from server...");
-                    String frame = netIn.readLine();
+                    logger.info("Reading command text result from server...");
+                    String result = netIn.readLine();
                     logger.info("Read new description from server.");
+                    //Get new map from server
+                    logger.info("Getting updated map object...");
+                    gameMap = (GameMap) objectIn.readObject();
+                    
+                    //Get new player object from server
+                    logger.info("Getting updated player object...");
+                    player = (Player) objectIn.readObject();
+
                     //print local frame
-                    textOutFrame.setText("");
-                    textOutFrame.append(frame);
+                    output.updateText(result);
+                    output.updateView(0, 0);
+                    output.printFrame();
                 }else{
                     //send nocmd indicator byte            
                     socketOutStream.write(NO_COMMAND);
                 }
             }catch(IOException e){
                 logger.severe("IOException while sending command to server.");
+                System.exit(-1);
+            }catch(ClassNotFoundException e){
+                logger.severe("Error reading updated map or player objects.");
                 System.exit(-1);
             }
         
@@ -190,11 +207,6 @@ public class MainFrameMP extends JFrame{
             }
         }
     }
-	
-	private void playerUpdate(){
-		output.updateView(player.getX(), player.getY());
-		output.printFrame();
-	}
 	
 	//GUI STUFF
 	private Dimension dims = null;
@@ -210,7 +222,7 @@ public class MainFrameMP extends JFrame{
 	public static final int MAIN_HEIGHT = 600;
 	
 	//GAME LOGIC STUFF
-	private Map gameMap = null;
+	private GameMap gameMap = null;
 	private Player player = null;
 	private CommandEval cmdEval = null;
 	private TextOutput output = null;
@@ -227,7 +239,7 @@ public class MainFrameMP extends JFrame{
     BufferedReader netIn = null;
     ObjectInputStream objectIn = null;
     
-    private static final int CLIENT_TICK = 1500;
+    private static final int CLIENT_TICK = 4000;
     private static final int COMMAND_WAITING = 10;
     private static final int NO_COMMAND = 11;
     private static final int READY_TO_READ = 12;

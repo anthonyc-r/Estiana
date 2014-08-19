@@ -3,7 +3,7 @@
 package server;
 
 import animals.Player;
-import map.Map;
+import map.GameMap;
 import execution.CommandEval;
 import server.ServerTextOutput;
 
@@ -11,7 +11,7 @@ import java.net.*;
 
 public class NetworkedPlayer extends Player{
     
-    public NetworkedPlayer(String aName, Map aMap, Socket aSocket){
+    public NetworkedPlayer(String aName, GameMap aMap, Socket aSocket){
         super(aName, aMap);
         socket = aSocket;
         //TODO: find way of passing a 'networked textOut'

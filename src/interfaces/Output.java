@@ -1,6 +1,6 @@
 package interfaces;
 
-import map.Map;
+import map.GameMap;
 import javax.swing.JTextArea;
 
 public interface Output {

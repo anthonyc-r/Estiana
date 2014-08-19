@@ -1,13 +1,13 @@
 package gui;
 
 import inout.TextOutput;
-import map.Map;
+import map.GameMap;
 import javax.swing.JTextArea;
 import java.util.ArrayList;
 
 public class TextAreaTextOutput extends TextOutput{
     
-    public TextAreaTextOutput(Map gameMap, JTextArea aTextArea){
+    public TextAreaTextOutput(GameMap gameMap, JTextArea aTextArea){
         super(gameMap);
         textArea = aTextArea;
     }

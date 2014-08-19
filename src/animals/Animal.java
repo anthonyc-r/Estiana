@@ -8,7 +8,7 @@ import exceptions.ObstructedPathException;
 import exceptions.TerrainTooSteepException;
 import map.Border;
 import map.Direction;
-import map.Map;
+import map.GameMap;
 import map.Tile;
 import inout.TextOutput;
 
@@ -21,7 +21,7 @@ public class Animal implements Serializable {
 	 * @param aMap			The map a player is associated with.
 	 */
 	
-	public Animal(String aType, Map aMap){
+	public Animal(String aType, GameMap aMap){
 		this.xLoc = 1;
 		this.yLoc = 1;
 		this.type = aType;
@@ -154,5 +154,5 @@ public class Animal implements Serializable {
 	private double power;
 	private int xLoc;
 	private int yLoc;
-	private Map gameMap;
+	private GameMap gameMap;
 }

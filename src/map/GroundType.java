@@ -14,6 +14,6 @@ public enum GroundType implements Serializable{
 	 * PRINT IN LOWER CASE
 	 */
 	public String toString(){
-		return this.toString().toLowerCase();
+		return super.toString().toLowerCase();
 	}
 }

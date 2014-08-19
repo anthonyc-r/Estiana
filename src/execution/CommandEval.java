@@ -18,17 +18,21 @@ import exceptions.BoundaryAlreadyPlacedException;
 import exceptions.EndOfMapException;
 import exceptions.ObstructedPathException;
 import exceptions.TerrainTooSteepException;
+import exceptions.InvalidDirectionException;
+import exceptions.ItemNotFoundException;
 import animals.*;
 import inout.*;
 import interfaces.Item;
 import interfaces.Surface;
 import items.Note;
+import items.Dirt;
+import items.ItemType;
 import map.*;
 import execution.gui.*;
 
 public class CommandEval {
 	
-	public CommandEval(Map aGameMap, Player aPlayer){
+	public CommandEval(GameMap aGameMap, Player aPlayer){
 		estiana = aGameMap;
 		player = aPlayer;
 	}
@@ -46,17 +50,17 @@ public class CommandEval {
 		int indx = fullCmd.indexOf(" ");
 		String ins = fullCmd.substring(0, (indx)).trim();
 		String target = fullCmd.substring(indx+1).trim();		
-		
+		Tile playerTile = estiana.getTile(player.getX(), player.getY());
 		if(ins.equalsIgnoreCase("help")){
-			printHelp();
+			return printHelp();
 		}else if(ins.equalsIgnoreCase("move")){
-			move(target);
+			return move(target);
 		}else if(ins.equalsIgnoreCase("examine")){
-			examine(estiana.getTile(player.getX(), player.getY()), target);
-		}else if(ins.equalsIgnoreCase("")){
-			
-		}else if(ins.equalsIgnoreCase("")){
-			
+			return examine(playerTile, target);
+		}else if(ins.equalsIgnoreCase("dig")){
+			return digCorner(playerTile, target);
+		}else if(ins.equalsIgnoreCase("raise")){
+			return raiseCorner(playerTile, target);
 		}else if(ins.equalsIgnoreCase("")){
 			
 		}else if(ins.equalsIgnoreCase("")){
@@ -67,16 +71,16 @@ public class CommandEval {
 			
 		}
         
-        return textResult;
+        return "Invalid command.";
 	}
 	
-	private void printHelp(){
+	private String printHelp(){
 		StringBuilder bldr = new StringBuilder();
 		bldr.append("Commands are: ");
 		for(String cmd : cmds){
 			bldr.append(cmd+", ");
 		}
-		textResult = bldr.toString();
+		return bldr.toString();
 	}
 	
 	private void saveGame(){
@@ -91,27 +95,27 @@ public class CommandEval {
 		}
 	}
 	
-	private void move(String directionStr){
+	private String move(String directionStr){
 		try{
 			player.move(directionStr);
-			textResult = "You move "+directionStr;
+			return "You move "+directionStr;
 		}catch(IllegalArgumentException e){
-			textResult = "Invalid direction!";
+			return "Invalid direction!";
 		}catch(EndOfMapException e){
-			textResult = e.getMessage();
+			return e.getMessage();
 		}catch(TerrainTooSteepException e){
-			textResult = e.getMessage();
+			return e.getMessage();
 		}catch(ObstructedPathException e){
-			textResult = e.getMessage();
+			return e.getMessage();
 		}
 	}
 	
-	private Map loadGame(){
-		Map savedMap = null;
+	private GameMap loadGame(){
+		GameMap savedMap = null;
 		try{
 			FileInputStream fStream = new FileInputStream("test.ser");
 			ObjectInputStream in = new ObjectInputStream(fStream);
-			savedMap = (Map) in.readObject();
+			savedMap = (GameMap) in.readObject();
 			in.close();
 		} catch(ClassNotFoundException nf){
 			nf.printStackTrace();
@@ -121,35 +125,74 @@ public class CommandEval {
 		return savedMap;
 	}
 	
-	private void examine(Tile aTile, String someEntity){
+	private String examine(Tile aTile, String someEntity){
 		ArrayList<Item> items = estiana.getItemPlane().getItems(aTile);
 		ArrayList<Animal> animals = estiana.getAnimalPlane().getAnimals(aTile);
 		ArrayList<Boundary> bounds = estiana.getBoundaryPlane().getBoundaryList(aTile);
 		//Buildings
 		for(Boundary bound : bounds){
 			if(bound.getName().equalsIgnoreCase(someEntity)){
-				textResult = bound.getDesc();
+				return bound.getDesc();
 			}
 		}
 		//Items
 		for(Item item : items){
 			if(item.getName().equalsIgnoreCase(someEntity)){
-				textResult = item.getDesc();
+				return item.getDesc();
 			}
 		}
 		//Animals
 		for(Animal animal : animals){
 			if(animal.getName().equalsIgnoreCase(someEntity)){
-				textResult = animal.getDesc();
+				return animal.getDesc();
 			}
 		}
 		
+        return "Cannot see "+someEntity+".";
 	}
+    
+    private String digCorner(Tile aTile, String directionStr){
+        try{
+            Direction dir = Direction.valueOf(directionStr.toUpperCase());
+            Corner toDig = aTile.getCorner(dir);
+            GroundType type = toDig.getGroundType();
+            if(type == GroundType.ROCK || type == GroundType.WATER){
+                return "You cannot dig here.";
+            }else{
+                //Get an item of ground type and place in player inventory
+                toDig.addHeight(-1);
+                player.addToInventory(new Dirt());
+                return "You dig up some "+type.toString()+".";
+            }
+        }catch(InvalidDirectionException e){
+            return e.getMessage();
+        }catch(IllegalArgumentException e){
+            return "Invalid direction, "+directionStr+"!";
+        }
+    }
+    
+    private String raiseCorner(Tile aTile, String directionStr){
+        try{
+            Direction dir = Direction.valueOf(directionStr.toUpperCase());
+            Corner toRaise = aTile.getCorner(dir);
+            Item toDrop = player.findInInventory(ItemType.DIRT);
+            player.deleteFromInventory(toDrop);
+            toRaise.addHeight(1);
+            toRaise.setGroundType(GroundType.DIRT);
+            return "You drop some dirt on the "+dir.toString()+" corner.";
+            
+        }catch(InvalidDirectionException e){
+            return e.getMessage();
+        }catch(IllegalArgumentException e){
+            return "Invalid direction, "+directionStr+"!";
+        }catch(ItemNotFoundException e){
+            return "Cannot find item in inventory!";
+        }
+    }
 
 	
-	private Map estiana = null;
+	private GameMap estiana = null;
 	private Player player = null;
-	private String textResult = null;
     
 	private static final String[] cmds = {"help", "move {east, north, south, west}", "examine {name of thing}"}; 
 }
