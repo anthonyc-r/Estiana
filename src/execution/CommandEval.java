@@ -162,6 +162,9 @@ public class CommandEval {
                 //Get an item of ground type and place in player inventory
                 toDig.addHeight(-1);
                 player.addToInventory(new Dirt());
+                if(type == GroundType.GRASS){
+                    toDig.setGroundType(GroundType.DIRT);
+                }
                 return "You dig up some "+type.toString()+".";
             }
         }catch(InvalidDirectionException e){
