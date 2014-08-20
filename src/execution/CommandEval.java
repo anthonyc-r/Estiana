@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+import java.util.logging.*;
 
 import boundaries.Boundary;
 import boundaries.Fence;
@@ -61,8 +62,8 @@ public class CommandEval {
 			return digCorner(playerTile, target);
 		}else if(ins.equalsIgnoreCase("raise")){
 			return raiseCorner(playerTile, target);
-		}else if(ins.equalsIgnoreCase("")){
-			
+		}else if(ins.equalsIgnoreCase("drop")){
+			return dropItem(target);
 		}else if(ins.equalsIgnoreCase("")){
 			
 		}else if(ins.equalsIgnoreCase("")){
@@ -191,6 +192,30 @@ public class CommandEval {
         }catch(ItemNotFoundException e){
             return "Cannot find item in inventory!";
         }
+    }
+    
+    private String dropItem(String nameOfItem){
+        try{
+            ItemType typeToDrop = ItemType.valueOf(nameOfItem.toUpperCase());
+            Item toDrop = player.findInInventory(typeToDrop);
+            player.dropItem(toDrop);
+            return "You drop the "+nameOfItem+".";
+        }catch(IllegalArgumentException e){
+            return "Item, "+nameOfItem+", not found.";
+        }catch(ItemNotFoundException e){
+            return "Item, "+nameOfItem+", not found.";
+        }
+    }
+    
+    private String pickupItem(String nameOfItem){
+        /*try{
+             ItemType typeToDrop = ItemType.valueOf(nameOfItem.toUpperCase());
+        }catch(IllegalArgumentException e){
+            return "Item, "+nameOfItem+", not found.";            
+        }catch(ItemNotFoundException e){
+            return "Item, "+nameOfItem+", not found.";  
+        }*/
+            return "not implemented";
     }
 
 	

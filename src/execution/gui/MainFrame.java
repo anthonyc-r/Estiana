@@ -107,8 +107,7 @@ public class MainFrame extends JFrame{
 		output = new TextAreaTextOutput(gameMap, textOutFrame);
 		player = new Player("player", gameMap);
 		cmdEval = new CommandEval(gameMap, player);
-        
-        gfxPanel.setStuff(gameMap, player);
+        gfxPanel.setValues(gameMap, player);
 		//place player
 		Surface startTile = gameMap.getTile(1, 1);
 		gameMap.getAnimalPlane().placeAnimal(startTile, player);

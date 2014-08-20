@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import interfaces.Surface;
 import interfaces.Item;
+import exceptions.ItemNotFoundException;
 
 /**
  * The item plane is used to retrieve and store items associated with locations
@@ -52,6 +53,17 @@ public class ItemPlane implements Serializable{
 			itemMap.put(surface, newItems);
 		}
 	}
+    
+    public void removeItem(Surface surface, Item item) throws ItemNotFoundException{
+        /*if(itemMap.containsKey(surface) &&
+                itemMap.getValue(surface) != null &&
+                itemMap.getValue(surface).size() != 0 &&
+                itemMap.getValue(surface).contains(item)){
+           itemMap.getValue(surface).remove(item);     
+        }else{
+            throw new ItemNotFoundException();
+        }*/
+    }
 	
 
 	private HashMap<Surface, ArrayList<Item>> itemMap;

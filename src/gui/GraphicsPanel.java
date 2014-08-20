@@ -8,59 +8,99 @@ import java.awt.GradientPaint;
 import java.awt.Color;
 import java.awt.Rectangle;
 
-import map.GameMap;
 import animals.Player;
-import map.GroundType;
+import map.*;
 
 public class GraphicsPanel extends JPanel{
 	
 	public GraphicsPanel(){
-		//Get graphics context
-        width = super.getWidth();
-        height = super.getHeight();
 	}
     
-    public void setStuff(GameMap aGameMap, Player aPlayer){
-        gameMap = aGameMap;
-        player = aPlayer;   
+    public void setValues(GameMap gMap, Player plr){
+        gameMap = gMap;
+        player = plr;
+        iPlane = gMap.getItemPlane();
     }
 	
 	public void paint(Graphics g){
-        width = super.getWidth();
-        height = super.getHeight();
-		super.paint(g);
+        super.paint(g);
+        
+        
 		Graphics2D g2 = (Graphics2D) g;
-		GradientPaint gp = new GradientPaint(0f,0f,Color.blue,0f,30f,Color.green);
-		g2.setPaint(gp);
-		//g2.fill(new Rectangle(2, 2, 50, 50));
+        
         if(gameMap != null){
+            iPlane = gameMap.getItemPlane();
+            
+            int width = super.getWidth();       //780   24x :: 11 - p - 12
+            int height = super.getHeight();     //386   13x :: 6 - p - 6
+        
+            int playerX = player.getX();
+            int playerY = player.getY();
+            int mapHeight = gameMap.getMapHeight();
+            int mapWidth = gameMap.getMapWidth();
+            //Set maximum frame bounds
+            int frameOriginX = playerX - 11;
+            int frameOriginY = playerY - 6;
+            int frameEndX = playerX + 26;//13;
+            int frameEndY = playerY + 14;//7;
+            //Verify maximum bounds are within map limits
+            if(frameOriginX<0){
+                frameOriginX = 0;
+            }
+            if(frameOriginY<0){
+                frameOriginY = 0;
+            }
+            if(frameEndX>mapWidth){
+                frameEndX = mapWidth;
+            }
+            if(frameEndY>mapHeight){
+                frameEndY = mapHeight;
+            }
+            
 
-        for(int i=0; i<10; i++){
-            for(int j=0; j<10; j++){
-                GroundType gType = gameMap.getTile(i, j).getGroundType();
-                
-                switch(gType){
-                    case GRASS:
-                        g2.setPaint(Color.GREEN);
-                        break;
-                    case DIRT:
-                        g2.setPaint(Color.LIGHT_GRAY);
-                        break;
-                    default:
-                        g2.setPaint(Color.WHITE);
+            for(int i=0; i<24; i++){
+                for(int j=0; j<13; j++){
+                    //If within frame
+                    if(frameOriginX+i<frameEndX && frameOriginY+j<frameEndY){
+                        //Get the tile
+                        Tile toDraw = gameMap.getTile(frameOriginX+i, frameOriginY+j);
+                    
+                        GroundType gType = toDraw.getGroundType();
+                    
+                        switch(gType){
+                            case GRASS:
+                                g2.setPaint(Color.GREEN);
+                                break;
+                            case DIRT:
+                                g2.setPaint(Color.LIGHT_GRAY);
+                                break;
+                            default:
+                                g2.setPaint(Color.WHITE);
+                        }
+                        g2.fill(new Rectangle(i*32, j*32, (i*32)+32, (j*32)+32));
+                        //Draw items on tile
+                        if(iPlane.getItems(toDraw).size() != 0){
+                            g2.setPaint(Color.MAGENTA);
+                            g2.fill(new Rectangle(i*32, j*32, (i*32)+32, (j*32)+32));
+                        }
+                        //Draw animals on tile
+                        if(playerX == frameOriginX+i && playerY == frameOriginY+j){
+                            g2.setPaint(Color.RED);
+                            g2.fill(new Rectangle(i*32, j*32, (i*32)+32, (j*32)+32));
+                        }
+                        //Draw boundaries on tile....
+                        
+                    }else{
+                        g2.setPaint(Color.BLACK);
+                        g2.fill(new Rectangle(i*32, j*32, (i*32)+32, (j*32)+32));
+                    }
                 }
-                if(player.getX() == i && player.getY() == j){
-                    g2.setPaint(Color.RED);
-                }
-                g2.fill(new Rectangle(i*32, j*32, (i*32)+32, (j*32)+32));
             }
         }
-        }
+        
 	}
-    
-    private int width;
-    private int height;
     
     private GameMap gameMap = null;
     private Player player = null;
+    private ItemPlane iPlane = null;
 }

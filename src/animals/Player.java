@@ -2,6 +2,7 @@ package animals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.logging.*;
 
 import exceptions.EndOfMapException;
 import exceptions.ItemNotFoundException;
@@ -9,6 +10,7 @@ import items.ItemType;
 import map.Direction;
 import map.GameMap;
 import map.Tile;
+import map.ItemPlane;
 import inout.TextOutput;
 import interfaces.Item;
 
@@ -28,6 +30,7 @@ public class Player extends Animal implements Serializable {
 	public Player(String aName, GameMap aMap){
 		super("yourself", aMap);
 		super.setName(aName);
+        map = aMap;
 	}
 	
 	public String getDesc(){
@@ -52,14 +55,27 @@ public class Player extends Animal implements Serializable {
         inventory.add(anItem);
     }
     
-	public void pickUpItem(Item anItem){
-        
+	public void pickUpItem(Item anItem) throws ItemNotFoundException{
+        Tile standingOn = map.getTile(getX(), getY());
+        ItemPlane iPlane = map.getItemPlane();
+        iPlane.getItems(standingOn);
+        iPlane.removeItem(standingOn, anItem);
+        inventory.add(anItem);
 	}
     
 	public void dropItem(Item anItem){
-		
+        logger.info("Dropping item...");
+        logger.info("Getting tile standing on...");
+        Tile standingOn = map.getTile(getX(), getY());
+        ItemPlane iPlane = map.getItemPlane();
+        logger.info("Calling place item...");
+        iPlane.placeItem(standingOn, anItem);
+        logger.info("Removing item from inventory");
+        inventory.remove(anItem);
 	}
 	
 	private GameMap map;
 	private ArrayList<Item> inventory = new ArrayList<Item>(10);
+    
+    private static final Logger logger = Logger.getLogger(Player.class.getName());
 }
