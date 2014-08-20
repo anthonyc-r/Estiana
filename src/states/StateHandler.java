@@ -1,7 +1,6 @@
-package events;
+package states;
 
 import animals.*;
-import interfaces.*;
 import map.GameMap;
 
 public class StateHandler {
